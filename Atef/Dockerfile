@@ -1,18 +1,18 @@
-# Use an official Python base image
+# استخدم صورة رسمية فيها Python
 FROM python:3.10-slim
 
-# Set working directory
+# تحديد مجلد العمل داخل الحاوية
 WORKDIR /app
 
-# Copy all files into the container
+# نسخ ملفات المشروع للحاوية
 COPY . .
 
-# Upgrade pip and install dependencies
+# تثبيت المتطلبات
 RUN pip install --upgrade pip
 RUN pip install -r Atef/requirements.txt
 
-# Expose port (if needed, e.g. 5000)
+# فتح البورت (لو بتستخدم Flask مثلًا)
 EXPOSE 5000
 
-# Start the app (مثال لو Flask)
+# الأمر لتشغيل التطبيق
 CMD ["python", "Atef/app.py"]
