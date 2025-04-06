@@ -458,14 +458,19 @@
 
     <div class="container">
         <nav>
-            <div class="logo">وظفني.ai</div>
-            <div class="nav-links">
-                <a href="features.html">المميزات</a>
-                <a href="jobs.html">الوظائف</a>
-                <a href="companies.html">الشركات</a>
-                <a href="login.html">تسجيل الدخول</a>
-                <a href="signup.html">إنشاء حساب</a>
+         
 
+                
+                    <div class="logo">وظفني.ai</div>
+                    <div class="nav-links">
+                        <a href="{{ url_for('features') }}">المميزات</a>
+                        <a href="{{ url_for('jobs') }}">الوظائف</a>
+                        <a href="{{ url_for('companies') }}">الشركات</a>
+                        <a href="{{ url_for('login') }}">تسجيل الدخول</a>
+                        <a href="{{ url_for('signup') }}">إنشاء حساب</a>
+                    </div>
+                
+                
             </div>
         </nav>
 
