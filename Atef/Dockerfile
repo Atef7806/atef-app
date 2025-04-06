@@ -11,5 +11,10 @@ COPY . .
 RUN pip install --upgrade pip
 RUN pip install -r Atef/requirements.txt
 
+<<<<<<< HEAD
 # Run the app using gunicorn
 CMD ["gunicorn", "-b", "0.0.0.0:8080", "Atef.app:app"]
+=======
+# Run the app
+CMD ["python", "Atef/app.py"]
+>>>>>>> 3122b61 (\)
