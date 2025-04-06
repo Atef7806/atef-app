@@ -1,18 +1,15 @@
 # Use official Python image
 FROM python:3.10-slim
 
-# Set working directory
+# Set work directory
 WORKDIR /app
 
 # Copy all project files
 COPY . .
 
-# Move to the project directory
-WORKDIR /app/Atef
-
-# Upgrade pip and install dependencies
-RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install -r requirements.txt
+# Install dependencies from correct path
+RUN pip install --upgrade pip
+RUN pip install -r Atef1/Atef/requirements.txt
 
 # Run the app
-CMD ["python3", "app.py"]
+CMD ["python", "Atef1/Atef/app.py"]
