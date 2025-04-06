@@ -9,7 +9,7 @@ COPY . .
 
 # Install dependencies
 RUN pip install --upgrade pip
-RUN pip install -r Atef/requirements.txt  # ✅ ده صح لأن الملف داخل مجلد Atef
+RUN pip install -r Atef/requirements.txt
 
 # Run the app
-CMD ["python", "Atef/app.py"]  # ✅ برضو عدل المسار لو app.py جوه Atef
+CMD ["python", "Atef/app.py"]
