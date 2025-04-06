@@ -1,0 +1,5 @@
+{
+    "build": "pip install -r Atef/requirements.txt",
+    "start": "python Atef/app.py"
+  }
+  
