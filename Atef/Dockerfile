@@ -1,18 +1,18 @@
-# Use a Python base image
+# Use an official Python base image
 FROM python:3.10-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy project files
+# Copy all files into the container
 COPY . .
 
-# Install dependencies
-RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install -r Atef/requirements.txt
+# Upgrade pip and install dependencies
+RUN pip install --upgrade pip
+RUN pip install -r Atef/requirements.txt
 
-# Expose the port (لو في Flask مثلا)
+# Expose port (if needed, e.g. 5000)
 EXPOSE 5000
 
-# Start command
-CMD ["python3", "Atef/app.py"]
+# Start the app (مثال لو Flask)
+CMD ["python", "Atef/app.py"]
