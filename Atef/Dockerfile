@@ -4,12 +4,12 @@ FROM python:3.10-slim
 # Set work directory
 WORKDIR /app
 
-# Copy all project files
+# Copy contents
 COPY . .
 
-# Install dependencies from correct path
+# Install dependencies
 RUN pip install --upgrade pip
-RUN pip install -r Atef1/Atef/requirements.txt
+RUN pip install -r Atef/requirements.txt  # ✅ ده صح لأن الملف داخل مجلد Atef
 
 # Run the app
-CMD ["python", "Atef1/Atef/app.py"]
+CMD ["python", "Atef/app.py"]  # ✅ برضو عدل المسار لو app.py جوه Atef
