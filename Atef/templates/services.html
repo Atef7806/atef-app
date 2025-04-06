@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خدمات التوظيف الذكي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0a1128;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .cyber-header {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(45deg, #001f3f, #0a1128);
+        }
+
+        .cyber-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-30px, 30px); }
+        }
+
+        .cyber-title {
+            font-size: 4em;
+            text-align: center;
+            background: linear-gradient(45deg, #00ff88, #00a3ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            animation: titlePulse 2s infinite alternate;
+        }
+
+        @keyframes titlePulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        .services-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            padding: 50px 5%;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px) rotateX(10deg) rotateY(-10deg);
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 255, 136, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .service-card:hover::before {
+            left: 100%;
+        }
+
+        .service-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #00ff88;
+            text-shadow: 0 0 15px #00ff88;
+        }
+
+        .ai-process {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            padding: 100px 5%;
+            flex-wrap: wrap;
+        }
+
+        .process-step {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(0, 255, 136, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .process-step:hover {
+            transform: scale(1.2) rotate(360deg);
+            box-shadow: 0 0 40px #00ff88;
+        }
+
+        .neon-line {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #00ff88, transparent);
+            width: 100px;
+            top: 50%;
+            opacity: 0.5;
+        }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 50px 5%;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 30px;
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+
+        .stat-box:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateY(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .cyber-title { font-size: 2.5em; }
+            .neon-line { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header class="cyber-header">
+        <div class="cyber-grid"></div>
+        <h1 class="cyber-title">خدماتنا الذكية</h1>
+    </header>
+
+    <section class="services-container">
+        <div class="service-card">
+            <i class="fas fa-robot service-icon"></i>
+            <h3>الفرز الذكي</h3>
+            <p>تحليل آلي للسير الذاتية باستخدام خوارزميات التعلم العميق</p>
+            <div class="ai-progress"></div>
+        </div>
+        
+        <div class="service-card">
+            <i class="fas fa-brain service-icon"></i>
+            <h3>المقابلات الافتراضية</h3>
+            <p>نظام مقابلات تفاعلي مع مساعد افتراضي ذكي</p>
+        </div>
+
+        <div class="service-card">
+            <i class="fas fa-chart-pie service-icon"></i>
+            <h3>التحليل الإحصائي</h3>
+            <p>تقارير مفصلة عن أداء المرشحين باستخدام الذكاء الاصطناعي</p>
+        </div>
+    </section>
+
+    <section class="ai-process">
+        <div class="process-step">
+            <h4>التقديم</h4>
+            <i class="fas fa-upload"></i>
+        </div>
+        <div class="neon-line"></div>
+        
+        <div class="process-step">
+            <h4>التحليل</h4>
+            <i class="fas fa-microchip"></i>
+        </div>
+        <div class="neon-line"></div>
+        
+        <div class="process-step">
+            <h4>النتائج</h4>
+            <i class="fas fa-chart-line"></i>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="stat-box">
+            <h2>98%</h2>
+            <p>دقة التحليل</p>
+        </div>
+        <div class="stat-box">
+            <h2>50k+</h2>
+            <p>سيرة ذاتية تم تحليلها</p>
+        </div>
+        <div class="stat-box">
+            <h2>24/7</h2>
+            <p>دعم فني</p>
+        </div>
+    </section>
+
+    <script>
+        // تأثير الجسيمات المخصصة
+        class Particle {
+            constructor(x, y) {
+                this.element = document.createElement('div');
+                this.element.className = 'particle';
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 10;
+                this.vy = (Math.random() - 0.5) * 10;
+                this.life = 1;
+                
+                this.element.style.left = x + 'px';
+                this.element.style.top = y + 'px';
+                document.body.appendChild(this.element);
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= 0.02;
+                
+                this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+                this.element.style.opacity = this.life;
+                
+                if (this.life <= 0) this.element.remove();
+            }
+        }
+
+        // نظام الجسيمات
+        document.addEventListener('click', (e) => {
+            for(let i = 0; i < 20; i++) {
+                const p = new Particle(e.clientX, e.clientY);
+                setInterval(() => p.update(), 30);
+            }
+        });
+
+        // تأثيرات التمرير
+        const serviceCards = document.querySelectorAll('.service-card');
+        window.addEventListener('scroll', () => {
+            serviceCards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = (rect.left / window.innerWidth) * 2 - 1;
+                const y = (rect.top / window.innerHeight) * 2 - 1;
+                
+                card.style.transform = `
+                    perspective(1000px)
+                    rotateX(${y * 10}deg)
+                    rotateY(${x * 10}deg)
+                `;
+            });
+        });
+
+        // تأثيرات الظهور
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.service-card, .process-step, .stat-box').forEach(el => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(50px)';
+            observer.observe(el);
+        });
+
+        // تأثيرات الخلفية التفاعلية
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            document.documentElement.style.setProperty('--mouse-x', x);
+            document.documentElement.style.setProperty('--mouse-y', y);
+        });
+    </script>
+</body>
+</html>
+
