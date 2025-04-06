@@ -1,1 +1,1 @@
-web: gunicorn Atef.app:app
+web: gunicorn app:app
