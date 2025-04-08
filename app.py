@@ -11,14 +11,13 @@ def get_companies():
     conn.close()
     return rows
 
-# 🏠 الصفحة الرئيسية - ملف companies.html هو الصفحة الرئيسية
+# 🏠 الصفحة الرئيسية تعرض الشركات
 @app.route('/')
 def companies():
     all_companies = get_companies()
     return render_template('companies.html', companies=all_companies)
 
-# ✅ باقي الصفحات:
-
+# ✅ روابط صفحات أخرى:
 @app.route('/contact-us')
 def contact_us():
     return render_template('contact us.html')
@@ -90,14 +89,18 @@ def weblog():
 @app.route('/who-are-you')
 def who_are_you():
     return render_template('who are you.html')
+
 @app.route('/home')
 def home():
     return render_template('home.html')
-# صفحة إدارة الحساب
+
+@app.route('/about')
+def about():
+    return render_template('who are you.html')
+
 @app.route('/account-management')
 def account_management():
     return render_template('account_management.html')
 
 if __name__ == '__main__':
-   app.run(host='0.0.0.0', port=5000, debug=True)
-
+    app.run(host='0.0.0.0', port=5000, debug=True)

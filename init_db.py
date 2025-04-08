@@ -24,24 +24,3 @@ conn.commit()
 conn.close()
 
 print("تم إنشاء قاعدة البيانات وإضافة البيانات بنجاح.")
-import sqlite3
-
-def init_db():
-    connection = sqlite3.connect("users.db")  # اسم قاعدة البيانات
-    cursor = connection.cursor()
-
-    # كود إنشاء جدول المستخدمين
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL
-        );
-    ''')
-
-    connection.commit()
-    connection.close()
-    print("Database and 'users' table created successfully.")
-
-if __name__ == "__main__":
-    init_db()
