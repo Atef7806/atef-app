@@ -20,3 +20,12 @@ Python app.py
 ------------------
 
 تشغيل السيرفر عام
+
+
+نشر التعديلات:
+من مجلد ATEF1 (المجلد اللي فيه .git):
+
+git add .
+git commit -m "fix: correct app path and Docker CMD"
+git push
+fly deploy
