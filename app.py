@@ -104,3 +104,7 @@ def account_management():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
+@app.route('/employment-application')
+def employment_application():
+    return render_template('employment application.html')
