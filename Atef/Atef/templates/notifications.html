@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الإشعارات الذكية - نظام التوظيف الذكي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6C5CE7;
+            --secondary-color: #A8A5E6;
+            --accent-color: #FFD700;
+            --dark-color: #2D3436;
+            --gradient: linear-gradient(135deg, #6C5CE7 0%, #A8A5E6 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: var(--gradient);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .notification-portal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            background: repeating-radial-gradient(
+                circle at 50% 50%,
+                rgba(255, 215, 0, 0.1),
+                rgba(108, 92, 231, 0.1) 20px
+            );
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .notification-header {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .ai-filter {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .notification-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            transform-style: preserve-3d;
+            overflow: hidden;
+        }
+
+        .notification-card:hover {
+            transform: translateY(-5px) rotateX(5deg) rotateY(-5deg);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .notification-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.3),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .notification-card:hover::before {
+            left: 100%;
+        }
+
+        .ai-priority {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            background: var(--accent-color);
+            color: var(--dark-color);
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            font-weight: bold;
+            transform: rotate(-15deg);
+            animation: pulse 2s infinite;
+        }
+
+        .notification-badge {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification-badge:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .ai-suggestion {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255,255,255,0.95);
+            padding: 1.5rem;
+            border-radius: 20px;
+            width: 300px;
+            transform: translateY(110%);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .ai-suggestion.active {
+            transform: translateY(0);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: rotate(-15deg) scale(1); }
+            50% { transform: rotate(-15deg) scale(1.1); }
+            100% { transform: rotate(-15deg) scale(1); }
+        }
+
+        .notification-type {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-left: 1rem;
+        }
+
+        .unread-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            animation: ping 1.5s infinite;
+        }
+
+        @keyframes ping {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        .time-stamp {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            color: var(--dark-color);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .notification-actions {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .notification-card:hover .notification-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            padding: 0.3rem 0.8rem;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="notification-portal"></div>
+    
+    <div class="container">
+        <header class="notification-header">
+            <h1>🔔 الإشعارات الذكية</h1>
+            <p>ابقَ على اطلاع بكل التحديثات المهمة في الوقت الفعلي</p>
+        </header>
+
+        <div class="ai-filter">
+            <div class="filter-chip active">الكل</div>
+            <div class="filter-chip">الوظائف</div>
+            <div class="filter-chip">الرسائل</div>
+            <div class="filter-chip">التحديثات</div>
+        </div>
+
+        <div class="notification-list">
+            <!-- سيتم إضافة الإشعارات ديناميكيًا -->
+        </div>
+
+        <div class="notification-badge" onclick="toggleAISuggestion()">
+            <span id="unreadCount">3</span> إشعار جديد
+        </div>
+
+        <div class="ai-suggestion" id="aiSuggestion">
+            <h3>⚡ اقتراحات الذكاء الاصطناعي</h3>
+            <p id="suggestionText"></p>
+            <div class="ai-actions">
+                <button class="action-btn" style="background: var(--primary-color); color: white">تنفيذ المقترح</button>
+                <button class="action-btn" onclick="closeSuggestion()">تجاهل</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات الإشعارات المزيفة
+        const notifications = [
+            {
+                type: 'job',
+                title: 'وظيفة جديدة مطابقة!',
+                content: 'مطور ويب متقدم في شركة التقنية الرائدة',
+                time: 'منذ 5 دقائق',
+                unread: true,
+                priority: 'high'
+            },
+            {
+                type: 'message',
+                title: 'رسالة جديدة من مدير التوظيف',
+                content: 'نود تحديد مقابلة افتراضية معك',
+                time: 'منذ ساعة',
+                unread: true,
+                priority: 'medium'
+            },
+            {
+                type: 'update',
+                title: 'تحديث حالة التقديم',
+                content: 'تمت مراجعة سيرتك الذاتية بنجاح',
+                time: 'منذ 3 ساعات',
+                unread: false,
+                priority: 'low'
+            }
+        ];
+
+        // توليد الإشعارات
+        function generateNotifications() {
+            const list = document.querySelector('.notification-list');
+            list.innerHTML = notifications.map(notif => `
+                <div class="notification-card" onclick="showSuggestion('${notif.type}')">
+                    ${notif.unread ? `<div class="unread-dot"></div>` : ''}
+                    ${notif.priority === 'high' ? `<div class="ai-priority">!</div>` : ''}
+                    <div class="time-stamp">${notif.time}</div>
+                    <div style="display: flex; align-items: center; gap: 1rem">
+                        <div class="notification-type" style="background: ${getTypeColor(notif.type)}">
+                            ${getTypeIcon(notif.type)}
+                        </div>
+                        <div>
+                            <h3>${notif.title}</h3>
+                            <p>${notif.content}</p>
+                        </div>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="action-btn" style="background: var(--primary-color); color: white">فتح</button>
+                        <button class="action-btn" onclick="dismissNotification(event)">تجاهل</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // إدارة الإشعارات
+        function dismissNotification(event) {
+            event.stopPropagation();
+            event.target.closest('.notification-card').style.transform = 'translateX(100%)';
+            setTimeout(() => event.target.closest('.notification-card').remove(), 500);
+            updateUnreadCount();
+        }
+
+        // عرض اقتراحات الذكاء الاصطناعي
+        function showSuggestion(type) {
+            const suggestions = {
+                job: 'نقترح تحديث سيرتك الذاتية لزيادة فرص القبول بنسبة 40%',
+                message: 'الرد المقترح: شكرًا لاهتمامكم، أنا متاح يوم الثلاثاء الساعة 2 ظهرًا',
+                update: 'خوارزمياتنا تقترح إضافة 3 مهارات جديدة لتحسين ملفك الشخصي'
+            };
+            document.getElementById('suggestionText').textContent = suggestions[type];
+            document.getElementById('aiSuggestion').classList.add('active');
+        }
+
+        function toggleAISuggestion() {
+            document.getElementById('aiSuggestion').classList.toggle('active');
+        }
+
+        function closeSuggestion() {
+            document.getElementById('aiSuggestion').classList.remove('active');
+        }
+
+        // وظائف مساعدة
+        function getTypeColor(type) {
+            const colors = {
+                job: 'var(--primary-color)',
+                message: 'var(--accent-color)',
+                update: 'var(--secondary-color)'
+            };
+            return colors[type];
+        }
+
+        function getTypeIcon(type) {
+            const icons = {
+                job: '💼',
+                message: '📩',
+                update: '🔄'
+            };
+            return icons[type];
+        }
+
+        function updateUnreadCount() {
+            const unread = document.querySelectorAll('.unread-dot').length;
+            document.getElementById('unreadCount').textContent = unread;
+        }
+
+        // تهيئة الصفحة
+        window.addEventListener('load', () => {
+            generateNotifications();
+            setInterval(() => {
+                document.querySelectorAll('.notification-card').forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 200);
+                });
+            }, 500);
+        });
+
+        // محاكاة الإشعارات الحية
+        setInterval(() => {
+            if(Math.random() > 0.5) {
+                const newNotif = {
+                    type: ['job', 'message', 'update'][Math.floor(Math.random()*3)],
+                    title: 'إشعار جديد من النظام',
+                    content: 'هذا إشعار محاكاة للبيانات الحية',
+                    time: 'الآن',
+                    unread: true,
+                    priority: ['high', 'medium', 'low'][Math.floor(Math.random()*3)]
+                };
+                notifications.unshift(newNotif);
+                generateNotifications();
+                updateUnreadCount();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
