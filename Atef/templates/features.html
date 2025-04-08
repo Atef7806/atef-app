@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المميزات الذكية - نظام التوظيف الذكي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6C5CE7;
+            --secondary-color: #A8A5E6;
+            --accent-color: #FFD700;
+            --dark-color: #2D3436;
+            --gradient: linear-gradient(135deg, #6C5CE7 0%, #A8A5E6 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: var(--gradient);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .feature-portal {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,215,0,0.1) 10px,
+                rgba(255,215,0,0.1) 20px
+            );
+            z-index: 0;
+        }
+
+        .features-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .features-header {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .ai-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 25px;
+            padding: 2rem;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            transform-style: preserve-3d;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-15px) rotateX(10deg) rotateY(-5deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+        }
+
+        .holographic-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                var(--accent-color),
+                transparent
+            );
+            opacity: 0.3;
+            animation: hologram 6s linear infinite;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .ai-progress {
+            width: 100%;
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            width: 85%;
+            border-radius: 5px;
+            position: relative;
+            transition: width 0.5s ease;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            animation: shine 1.5s infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes hologram {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .ai-demo {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: rgba(255,255,255,0.95);
+            padding: 1.5rem;
+            border-radius: 20px;
+            width: 350px;
+            transform: translateY(110%);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .ai-demo.active {
+            transform: translateY(0);
+        }
+
+        .feature-badge {
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            background: var(--accent-color);
+            color: var(--dark-color);
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            font-weight: bold;
+            transform: rotate(-15deg);
+            animation: badgePulse 2s infinite;
+        }
+
+        @keyframes badgePulse {
+            0% { transform: rotate(-15deg) scale(1); }
+            50% { transform: rotate(-15deg) scale(1.1); }
+            100% { transform: rotate(-15deg) scale(1); }
+        }
+
+        .interactive-demo {
+            width: 100%;
+            height: 200px;
+            background: #f5f5f5;
+            border-radius: 15px;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-particle {
+            position: absolute;
+            background: var(--primary-color);
+            border-radius: 50%;
+            animation: float 3s infinite;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="feature-portal"></div>
+    
+    <div class="features-container">
+        <header class="features-header">
+            <h1>🚀 المميزات الذكية</h1>
+            <p>اكتشف قوة الذكاء الاصطناعي في عالم التوظيف الحديث</p>
+        </header>
+
+        <div class="ai-features-grid">
+            <div class="feature-card" onclick="showDemo('matching')">
+                <div class="holographic-effect"></div>
+                <div class="feature-badge">جديد!</div>
+                <i class="fas fa-brain feature-icon"></i>
+                <h3>المطابقة الذكية</h3>
+                <p>خوارزميات متقدمة لمطابقة السير الذاتية مع الوظائف</p>
+                <div class="ai-progress">
+                    <div class="progress-fill" style="width: 92%"></div>
+                </div>
+            </div>
+
+            <div class="feature-card" onclick="showDemo('analysis')">
+                <div class="holographic-effect"></div>
+                <i class="fas fa-chart-line feature-icon"></i>
+                <h3>تحليل المهارات</h3>
+                <p>تحليل تلقائي للمهارات باستخدام معالجة اللغة الطبيعية</p>
+                <div class="ai-progress">
+                    <div class="progress-fill" style="width: 88%"></div>
+                </div>
+            </div>
+
+            <div class="feature-card" onclick="showDemo('predictions')">
+                <div class="holographic-effect"></div>
+                <i class="fas fa-crystal-ball feature-icon"></i>
+                <h3>التنبؤات الذكية</h3>
+                <p>توقع فرص التوظيف بناءً على اتجاهات السوق</p>
+                <div class="ai-progress">
+                    <div class="progress-fill" style="width: 95%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ai-demo" id="aiDemo">
+            <button onclick="closeDemo()" class="close-btn">✖</button>
+            <h3 id="demoTitle"></h3>
+            <div class="interactive-demo" id="demoContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // معاينة المميزات
+        function showDemo(feature) {
+            const demos = {
+                matching: {
+                    title: 'عرض المطابقة الذكية',
+                    content: generateParticles()
+                },
+                analysis: {
+                    title: 'محاكاة تحليل المهارات',
+                    content: generateParticles()
+                },
+                predictions: {
+                    title: 'نموذج التنبؤات الذكية',
+                    content: generateParticles()
+                }
+            };
+            
+            document.getElementById('demoTitle').textContent = demos[feature].title;
+            document.getElementById('demoContent').innerHTML = demos[feature].content;
+            document.getElementById('aiDemo').classList.add('active');
+        }
+
+        function closeDemo() {
+            document.getElementById('aiDemo').classList.remove('active');
+        }
+
+        // توليد الجسيمات التفاعلية
+        function generateParticles() {
+            let particles = '';
+            for(let i=0; i<50; i++) {
+                particles += `<div class="demo-particle" style="
+                    width: ${Math.random()*10+5}px;
+                    height: ${Math.random()*10+5}px;
+                    left: ${Math.random()*100}%;
+                    top: ${Math.random()*100}%;
+                    animation-delay: ${Math.random()*2}s;
+                    opacity: ${Math.random()*0.5+0.2};
+                "></div>`;
+            }
+            return particles;
+        }
+
+        // تفاعل الجسيمات
+        document.querySelectorAll('.demo-particle').forEach(particle => {
+            particle.addEventListener('mouseenter', () => {
+                particle.style.transform = 'scale(1.5)';
+                particle.style.background = var(--accent-color);
+            });
+            particle.addEventListener('mouseleave', () => {
+                particle.style.transform = 'scale(1)';
+                particle.style.background = var(--primary-color);
+            });
+        });
+
+        // تهيئة الصفحة
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.feature-card').forEach((card, index) => {
+                card.style.transform = `translateY(${index * 30}px)`;
+                card.style.opacity = '0';
+                setTimeout(() => {
+                    card.style.transform = 'translateY(0)';
+                    card.style.opacity = '1';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>
+
