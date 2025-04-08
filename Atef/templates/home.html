@@ -517,7 +517,10 @@
 <br>
 <br>
 
- <a href="employment application.html"><button class="apply-button">تقديم الآن</button></a>   
+<a href="{{ url_for('employment_application') }}">
+    <button class="apply-button">تقديم الآن</button>
+</a>
+
 
 
 
@@ -532,18 +535,14 @@
                 <div class="footer-section">
                     <h3>روابط سريعة</h3>
                     <ul class="footer-links">
-                        <li><a href="home.html">الصفحة الرئيسية</a></li>
-                        <li><a href="who are you.html">من نحن</a></li>
-                        <li><a href="services.html">الخدمات</a></li>
-                        <li><a href="contact us.html">اتصل بنا</a></li>
+                        <ul class="footer-links">
+                            <li><a href="{{ url_for('companies') }}">الصفحة الرئيسية</a></li>
+                            <li><a href="{{ url_for('about') }}">من نحن</a></li>
+                            <li><a href="{{ url_for('services') }}">الخدمات</a></li>
+                            <li><a href="{{ url_for('contact_us') }}">اتصل بنا</a></li>
+                        </ul>
                         
 
-
-                        <li><a href="{{ url_for('home') }}">الصفحة الرئيسية</a></li>
-                        <li><a href="{{ url_for('about') }}">من نحن</a></li>
-                        <li><a href="{{ url_for('services') }}">الخدمات</a></li>
-                        <li><a href="{{ url_for('contact') }}">اتصل بنا</a></li>
-                        
                     </ul>
                 </div>
     <hr>
