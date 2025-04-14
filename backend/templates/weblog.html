@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المدونة الذكية - نظام التوظيف الذكي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6C5CE7;
+            --secondary-color: #A8A5E6;
+            --accent-color: #FFD700;
+            --dark-color: #2D3436;
+            --gradient: linear-gradient(135deg, #6C5CE7 0%, #A8A5E6 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: var(--gradient);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .blog-portal {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background: repeating-radial-gradient(
+                circle at 50% 50%,
+                rgba(255,215,0,0.1),
+                rgba(108,92,231,0.1) 20px
+            );
+            z-index: 0;
+        }
+
+        .blog-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .blog-header {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+            animation: titleFloat 3s ease-in-out infinite;
+        }
+
+        .ai-search {
+            background: rgba(255,255,255,0.95);
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            margin: 2rem auto;
+            width: 80%;
+            position: relative;
+        }
+
+        #blogSearch {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 1.2rem;
+            padding: 1rem;
+        }
+
+        #blogSearch:focus {
+            outline: none;
+        }
+
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .blog-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 25px;
+            padding: 2rem;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px) rotateX(5deg) rotateY(-5deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .card-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .blog-card:hover .card-gradient {
+            opacity: 0.1;
+        }
+
+        .category-tag {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            background: var(--accent-color);
+            color: var(--dark-color);
+            padding: 0.5rem 1.5rem;
+            border-radius: 15px;
+            transform: rotate(-15deg);
+            font-weight: bold;
+            animation: tagPulse 2s infinite;
+        }
+
+        .reading-progress {
+            width: 100%;
+            height: 5px;
+            background: #eee;
+            border-radius: 5px;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-color);
+            width: 0%;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            animation: shine 1.5s infinite;
+        }
+
+        @keyframes titleFloat {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes tagPulse {
+            0% { transform: rotate(-15deg) scale(1); }
+            50% { transform: rotate(-15deg) scale(1.1); }
+            100% { transform: rotate(-15deg) scale(1); }
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .ai-recommendation {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.95);
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .floating-particles {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--accent-color);
+            border-radius: 50%;
+            animation: float 4s infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="blog-portal"></div>
+    <div class="floating-particles"></div>
+    
+    <div class="blog-container">
+        <header class="blog-header">
+            <h1>📚 المدونة الذكية</h1>
+            <p>آخر المقالات والرؤى المدعومة بالذكاء الاصطناعي</p>
+        </header>
+
+        <div class="ai-search">
+            <input type="text" id="blogSearch" placeholder="ابحث في المقالات...">
+            <i class="fas fa-search"></i>
+        </div>
+
+        <div class="posts-grid" id="postsGrid">
+            <!-- سيتم إضافة المقالات هنا -->
+        </div>
+    </div>
+
+    <script>
+        // توليد المقالات
+        const posts = [
+            {
+                title: "مستقبل التوظيف مع الذكاء الاصطناعي",
+                content: "كيف تغير التقنيات الحديثة عالم التوظيف...",
+                category: "تقنيات",
+                readingTime: 5,
+                tags: ["AI", "مستقبل", "تقنية"]
+            },
+            {
+                title: "10 نصائح لسيرة ذاتية ناجحة",
+                content: "استخدم الذكاء الاصطناعي لتحسين سيرتك الذاتية...",
+                category: "نصائح",
+                readingTime: 8,
+                tags: ["نصائح", "سيرة ذاتية", "تطوير"]
+            },
+            {
+                title: "تحليل سوق العمل 2024",
+                content: "أهم التوجهات الحديثة في سوق العمل العالمي...",
+                category: "تحليلات",
+                readingTime: 12,
+                tags: ["سوق العمل", "اتجاهات", "تحليل"]
+            }
+        ];
+
+        function generatePosts() {
+            const grid = document.getElementById('postsGrid');
+            grid.innerHTML = posts.map(post => `
+                <div class="blog-card" onmouseenter="startProgress(this)" onmouseleave="resetProgress(this)">
+                    <div class="category-tag">${post.category}</div>
+                    <div class="card-gradient"></div>
+                    <h3>${post.title}</h3>
+                    <p>${post.content}</p>
+                    <div class="reading-progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="tags">
+                        ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join(' ')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // تفاعل شريط التقدم
+        function startProgress(card) {
+            const progressBar = card.querySelector('.progress-bar');
+            progressBar.style.width = '100%';
+        }
+
+        function resetProgress(card) {
+            const progressBar = card.querySelector('.progress-bar');
+            progressBar.style.width = '0%';
+        }
+
+        // إنشاء الجسيمات العائمة
+        function createParticles() {
+            const container = document.querySelector('.floating-particles');
+            for(let i=0; i<50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.cssText = `
+                    width: ${Math.random()*10+5}px;
+                    height: ${Math.random()*10+5}px;
+                    left: ${Math.random()*100}%;
+                    top: ${Math.random()*100}%;
+                    animation-delay: ${Math.random()*2}s;
+                    opacity: ${Math.random()*0.5+0.2};
+                `;
+                container.appendChild(particle);
+            }
+        }
+
+        // فلترة المقالات
+        document.getElementById('blogSearch').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.blog-card').forEach(card => {
+                const text = card.innerText.toLowerCase();
+                card.style.display = text.includes(searchTerm) ? 'block' : 'none';
+            });
+        });
+
+        // تهيئة الصفحة
+        window.addEventListener('load', () => {
+            generatePosts();
+            createParticles();
+            document.querySelectorAll('.blog-card').forEach((card, index) => {
+                card.style.transform = `translateY(${index * 30}px)`;
+                card.style.opacity = '0';
+                setTimeout(() => {
+                    card.style.transform = 'translateY(0)';
+                    card.style.opacity = '1';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>
+

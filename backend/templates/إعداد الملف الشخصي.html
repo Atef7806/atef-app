@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إعداد الملف الشخصي - نظام التوظيف الذكي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2A2A72;
+            --secondary-color: #009FFD;
+            --accent-color: #FF0076;
+            --ai-color: #00CC88;
+            --light-bg: #f8f9fa;
+            --dark-bg: #1a1a2e;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.97);
+            padding: 2rem;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+            backdrop-filter: blur(12px);
+            transform-style: preserve-3d;
+        }
+
+        .form-step {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .form-step.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .form-header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            animation: titleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .avatar-upload {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 2rem;
+            cursor: pointer;
+        }
+
+        .avatar-preview {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid var(--secondary-color);
+            background: #fff;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .avatar-preview:hover {
+            transform: rotate(15deg) scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 159, 253, 0.3);
+        }
+
+        .skill-tag {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(0, 159, 253, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin: 0.3rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .skill-tag:hover {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .timeline-input {
+            position: relative;
+            padding-left: 30px;
+            border-left: 3px solid var(--secondary-color);
+            margin: 1rem 0;
+        }
+
+        .timeline-input::before {
+            content: "";
+            position: absolute;
+            left: -10px;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            background: var(--ai-color);
+            border-radius: 50%;
+        }
+
+        .upload-area {
+            border: 3px dashed var(--secondary-color);
+            padding: 2rem;
+            text-align: center;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .upload-area.dragover {
+            background: rgba(0, 159, 253, 0.1);
+            transform: scale(1.05);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--ai-color);
+            transition: var(--transition);
+        }
+
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .ai-suggestion {
+            color: var(--accent-color);
+            cursor: pointer;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
+
+        .ai-suggestion:hover {
+            animation: suggestionPulse 1s infinite;
+        }
+
+        @keyframes suggestionPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-header">
+            <h1>إعداد الملف الشخصي</h1>
+            <div class="avatar-upload" onclick="document.getElementById('avatarInput').click()">
+                <div class="avatar-preview" id="avatarPreview">
+                    <i class="fas fa-user-plus" style="font-size: 4rem; color: #ddd;"></i>
+                </div>
+                <input type="file" id="avatarInput" hidden accept="image/*">
+            </div>
+        </div>
+
+        <!-- الخطوات -->
+        <div class="form-steps">
+            <!-- الخطوة 1: المعلومات الشخصية -->
+            <div class="form-step active" id="step1">
+                <div class="timeline-input">
+                    <input type="text" class="form-control" placeholder="الاسم الكامل" required>
+                </div>
+                <div class="timeline-input">
+                    <input type="date" class="form-control" required>
+                </div>
+                <div class="timeline-input">
+                    <input type="text" class="form-control" placeholder="الموقع (المدينة، الدولة)" required>
+                </div>
+            </div>
+
+            <!-- الخطوة 2: المؤهلات التعليمية -->
+            <div class="form-step" id="step2">
+                <div class="timeline-input">
+                    <input type="text" class="form-control" placeholder="آخر شهادة حصل عليها" required>
+                </div>
+                <div class="timeline-input">
+                    <input type="text" class="form-control" placeholder="التخصص" required>
+                </div>
+                <div class="timeline-input">
+                    <input type="text" class="form-control" placeholder="الجامعة / المعهد" required>
+                </div>
+            </div>
+
+            <!-- الخطوة 3: الخبرات العملية -->
+            <div class="form-step" id="step3">
+                <div class="timeline-input">
+                    <input type="text" class="form-control" placeholder="اسم الشركة" required>
+                </div>
+                <div class="timeline-input">
+                    <input type="text" class="form-control" placeholder="المسمى الوظيفي" required>
+                </div>
+                <div class="timeline-input">
+                    <input type="text" class="form-control" placeholder="المدة" required>
+                </div>
+            </div>
+
+            <!-- الخطوة 4: المهارات -->
+            <div class="form-step" id="step4">
+                <div class="skill-tags" id="skillTags"></div>
+                <div class="ai-suggestion" onclick="aiSuggestSkills()">
+                    <i class="fas fa-robot"></i> اقتراح مهارات بالذكاء الاصطناعي
+                </div>
+            </div>
+
+            <!-- الخطوة 5: رفع السيرة الذاتية -->
+            <div class="form-step" id="step5">
+                <div class="upload-area" id="dropZone"
+                    ondragover="handleDragOver(event)"
+                    ondragleave="handleDragLeave(event)"
+                    ondrop="handleDrop(event)">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--secondary-color);"></i>
+                    <p>اسحب وأفلت ملف السيرة الذاتية هنا أو انقر للاختيار</p>
+                    <input type="file" id="cvInput" hidden accept=".pdf,.doc,.docx">
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="uploadProgress"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-navigation">
+            <button class="btn btn-primary" onclick="previousStep()">السابق</button>
+            <button class="btn btn-primary" onclick="nextStep()">التالي</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        // تحميل الصورة الشخصية
+        document.getElementById('avatarInput').addEventListener('change', function(e) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                document.getElementById('avatarPreview').innerHTML = 
+                    `<img src="${reader.result}" style="width:100%; height:100%; object-fit:cover;">`;
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        });
+
+        // إدارة الخطوات
+        function showStep(step) {
+            document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step${step}`).classList.add('active');
+        }
+
+        function nextStep() {
+            if(currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+                updateProgress();
+            } else {
+                submitProfile();
+            }
+        }
+
+        function previousStep() {
+            if(currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+                updateProgress();
+            }
+        }
+
+        // اقتراح المهارات
+        function aiSuggestSkills() {
+            const skills = ['برمجة JavaScript', 'تصميم UX/UI', 'إدارة المشاريع', 'تحليل البيانات', 'التسويق الرقمي'];
+            const tagsContainer = document.getElementById('skillTags');
+            
+            tagsContainer.innerHTML = skills.map(skill => `
+                <div class="skill-tag" onclick="toggleSkill(this)">
+                    ${skill} <i class="fas fa-plus"></i>
+                </div>
+            `).join('');
+        }
+
+        // تحميل الملفات
+        function handleDragOver(e) {
+            e.preventDefault();
+            document.getElementById('dropZone').classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            document.getElementById('dropZone').classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const files = e.dataTransfer.files;
+            handleFileUpload(files[0]);
+        }
+
+        function handleFileUpload(file) {
+            // محاكاة عملية التحميل
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                document.getElementById('uploadProgress').style.width = `${progress}%`;
+                if(progress >= 100) clearInterval(interval);
+            }, 200);
+        }
+
+        // إرسال البيانات
+        function submitProfile() {
+            // محاكاة إرسال البيانات
+            document.querySelector('.container').style.transform = 'rotateY(180deg) scale(0.9)';
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

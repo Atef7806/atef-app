@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب - نظام التوظيف المستقبلي</title>
+    <style>
+        :root {
+            --primary: #7F00FF;
+            --secondary: #E100FF;
+            --neon: #00F7FF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(45deg, #0F0A31, #2A0944);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .galaxy-bg {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="%239F2BFF" d="M45,-67C58.1,-53.8,68.1,-39.4,75.5,-22.6C82.8,-5.7,87.5,13.6,80.8,26.9C74.1,40.3,56.1,47.8,40.1,59.3C24.1,70.7,10.1,86.2,-5.3,93.5C-20.7,100.8,-41.3,99.9,-55.1,87.7C-68.9,75.5,-75.8,52,-78.1,30.7C-80.5,9.4,-78.2,-9.7,-70.8,-25.8C-63.4,-41.9,-50.8,-55.1,-37.3,-68.1C-23.7,-81.2,-9.1,-94.1,5.7,-102.1C20.5,-110.1,41,-113.2,45,-67Z"/></svg>');
+            background-size: cover;
+            animation: galaxy 40s linear infinite;
+            opacity: 0.3;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 0 50px var(--primary);
+            width: 600px;
+            position: relative;
+            border: 2px solid var(--neon);
+            transition: transform 0.5s;
+        }
+
+        .container:hover {
+            transform: perspective(1000px) rotateX(5deg) rotateY(5deg);
+        }
+
+        .ai-assistant {
+            position: absolute;
+            top: -80px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 150px;
+            height: 150px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: float 4s ease-in-out infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .ai-assistant:hover {
+            transform: translateX(50%) scale(1.1);
+            box-shadow: 0 0 30px var(--neon);
+        }
+
+        .form-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 0.5s;
+        }
+
+        .form-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .holographic-input {
+            background: transparent;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            font-size: 18px;
+            transition: 0.3s;
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+        .holographic-input:focus {
+            border-color: var(--neon);
+            box-shadow: 0 0 20px var(--neon);
+            outline: none;
+        }
+
+        .cv-analyzer {
+            border: 3px dashed var(--secondary);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cv-analyzer:hover {
+            background: rgba(255, 0, 221, 0.905);
+        }
+
+        .skill-bubbles {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .skill-bubble {
+            background: var(--primary);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .skill-bubble:hover {
+            transform: scale(1.1);
+            background: var(--neon);
+            color: black;
+        }
+
+        .ai-recommendations {
+            position: fixed;
+            right: -400px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 350px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid var(--neon);
+            transition: 0.5s;
+        }
+
+        .ai-recommendations.active {
+            right: 20px;
+        }
+
+        @keyframes galaxy {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(50%, 0px); }
+            50% { transform: translate(50%, -20px); }
+        }
+
+        /* أنيميشنات إضافية وتفاصيل التصميم */
+    </style>
+</head>
+<body>
+    <div class="galaxy-bg"></div>
+    
+    <div class="container">
+        <div class="ai-assistant">🤖</div>
+
+        <div class="form-section active" id="personalInfo">
+            <h2 class="neon-title">البيانات الشخصية</h2>
+            <input type="text" class="holographic-input" placeholder="الاسم الكامل" id="fullName">
+            <input type="email" class="holographic-input" placeholder="البريد الإلكتروني" id="email">
+            
+            <div class="cv-analyzer" id="cvDropZone">
+                <p>اسحب سيرتك الذاتية هنا لتحليلها بالذكاء الاصطناعي</p>
+                <input type="file" hidden accept=".pdf,.docx">
+                <div class="ai-analysis-result"></div>
+            </div>
+        </div>
+
+        <div class="form-section" id="skillsSection">
+            <h2 class="neon-title">المهارات الموصى بها</h2>
+            <div class="skill-bubbles" id="skillContainer"></div>
+        </div>
+
+        <div class="form-section" id="securitySection">
+            <h2 class="neon-title">الأمان المتقدم</h2>
+            <div class="biometric-options">
+                <button class="holographic-btn" onclick="scanFace()">مسح الوجه</button>
+                <button class="holographic-btn" onclick="scanFingerprint()">البصمة الرقمية</button>
+            </div>
+        </div>
+
+        <button class="neo-btn" id="nextBtn">التالي ⏩</button>
+    </div>
+
+    <div class="ai-recommendations" id="aiSuggestions">
+        <h3>اقتراحات الذكاء الاصطناعي</h3>
+        <ul class="ai-suggestions-list"></ul>
+    </div>
+
+    
+    <script>
+        // محاكاة تحليل السيرة الذاتية بالذكاء الاصطناعي
+        document.getElementById('cvDropZone').addEventListener('drop', async (e) => {
+            e.preventDefault();
+            const file = e.dataTransfer.files[0];
+            analyzeCV(file);
+        });
+
+        async function analyzeCV(file) {
+            // محاكاة تحليل AI
+            const skills = await fakeAIanalysis(file);
+            showSkills(skills);
+            showAISuggestions(skills);
+        }
+
+        function showSkills(skills) {
+            const container = document.getElementById('skillContainer');
+            container.innerHTML = skills.map(skill => `
+                <div class="skill-bubble">${skill}</div>
+            `).join('');
+        }
+
+        // التنقل بين الخطوات
+        let currentStep = 1;
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            document.querySelector('.form-section.active').classList.remove('active');
+            currentStep++;
+            document.getElementById(getSectionId(currentStep)).classList.add('active');
+            updateUI();
+        });
+
+        // تفعيل مسح الوجه
+        async function scanFace() {
+            // تنفيذ مسح الوجه الحقيقي
+        }
+
+        // تأثيرات خاصة
+        document.querySelectorAll('.holographic-input').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.style.transform = 'perspective(1000px) rotateX(10deg)';
+            });
+        });
+    </script>
+</body>
+</html>

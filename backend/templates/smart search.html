@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام التوظيف الذكي - الذكاء الاصطناعي</title>
+    <style>
+        :root {
+            --primary-color: #6C5CE7;
+            --secondary-color: #A8A5E6;
+            --accent-color: #a373f2;
+            --dark-color: #2D3436;
+            --gradient: linear-gradient(135deg, #6C5CE7 0%, #A8A5E6 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: var(--gradient);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .animated-bg {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+            animation: slideDown 1s ease;
+        }
+
+        .search-container {
+            position: relative;
+            max-width: 800px;
+            margin: 2rem auto;
+            perspective: 1000px;
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .search-input {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            background: #f5f5f5;
+            transition: all 0.3s ease;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            box-shadow: 0 0 15px var(--accent-color);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .search-icon:hover {
+            transform: scale(1.2) rotate(360deg);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) rotateX(10deg) rotateY(-10deg);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, var(--accent-color), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        .feature-card:hover::before {
+            animation: borderFlow 3s linear infinite;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes borderFlow {
+            0% { transform: rotate(45deg) translateX(-50%); }
+            100% { transform: rotate(45deg) translateX(50%); }
+        }
+
+        .suggestions-box {
+            position: absolute;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            margin-top: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            opacity: 0;
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-item {
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .suggestion-item:hover {
+            background: #f8f9fa;
+            transform: translateX(10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    
+    <div class="container">
+        <header>
+            <h1>البحث الذكي للتوظيف</h1>
+            <p>اختبر قوة الذكاء الاصطناعي في ايجاد الوظائف المثالية</p>
+        </header>
+
+        <div class="search-container">
+            <div class="search-box">
+                <div class="search-input">
+                    <i class="search-icon">🔍</i>
+                    <input type="text" id="searchInput" placeholder="ابحث عن الوظائف، المهارات، الخبرات...">
+                </div>
+                <div class="suggestions-box" id="suggestionsBox"></div>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>مطابقة ذكية</h3>
+                <p>خوارزميات متقدمة لمطابقة السيرة الذاتية مع الوظائف</p>
+            </div>
+            <div class="feature-card">
+                <h3>تحليل المهارات</h3>
+                <p>تحليل تلقائي للمهارات وتقييمها باستخدام الـ NLP</p>
+            </div>
+            <div class="feature-card">
+                <h3>توصيات شخصية</h3>
+                <p>نظام توصيات ذكي بناءً على تفضيلاتك</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // إنشاء فقاعات الخلفية المتحركة
+        function createAnimatedBackground() {
+            const bg = document.querySelector('.animated-bg');
+            for (let i = 0; i < 50; i++) {
+                const bubble = document.createElement('div');
+                bubble.style.position = 'absolute';
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.top = `${Math.random() * 100}%`;
+                bubble.style.width = `${Math.random() * 30 + 10}px`;
+                bubble.style.height = bubble.style.width;
+                bubble.style.background = `rgba(255, 255, 255, ${Math.random() * 0.3})`;
+                bubble.style.borderRadius = '50%';
+                bubble.style.animation = `float ${Math.random() * 10 + 5}s infinite linear`;
+                bg.appendChild(bubble);
+            }
+        }
+
+        // اقتراحات البحث
+        const suggestions = [
+            'مطور ويب',
+            'مصمم جرافيك',
+            'مهندس شبكات',
+            'محلل بيانات',
+            'مدير مشاريع',
+            'اخصائي تسويق'
+        ];
+
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsBox = document.getElementById('suggestionsBox');
+
+        searchInput.addEventListener('input', function(e) {
+            const input = e.target.value.toLowerCase();
+            const filtered = suggestions.filter(s => s.toLowerCase().includes(input));
+            
+            suggestionsBox.innerHTML = filtered.map(s => `
+                <div class="suggestion-item">${s}</div>
+            `).join('');
+            
+            if (input && filtered.length) {
+                suggestionsBox.style.opacity = '1';
+                suggestionsBox.style.transform = 'scaleY(1)';
+            } else {
+                suggestionsBox.style.opacity = '0';
+                suggestionsBox.style.transform = 'scaleY(0)';
+            }
+        });
+
+        // النقر على الاقتراح
+        suggestionsBox.addEventListener('click', function(e) {
+            if (e.target.classList.contains('suggestion-item')) {
+                searchInput.value = e.target.textContent;
+                suggestionsBox.style.opacity = '0';
+                suggestionsBox.style.transform = 'scaleY(0)';
+            }
+        });
+
+        // تحريك العناصر عند التمرير
+        function animateOnScroll() {
+            const cards = document.querySelectorAll('.feature-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.8) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }
+            });
+        }
+
+        // تهيئة الصفحة
+        window.addEventListener('load', () => {
+            createAnimatedBackground();
+            animateOnScroll();
+        });
+
+        window.addEventListener('scroll', animateOnScroll);
+
+        // إضافة أنيميشن للفقاعات
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                from { transform: translateY(100vh) rotate(0deg); }
+                to { transform: translateY(-100vh) rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
+

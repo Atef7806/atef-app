@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>نظام إدارة الوظائف الذكي</title>
+    <style>
+        :root {
+            --main-gradient: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
+            --neon-green: #7666f0;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--main-gradient);
+            background-attachment: fixed;
+        }
+
+        .container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* تصميم البطاقات */
+        .job-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+        }
+
+        /* نموذج الإضافة */
+        .add-job-form {
+            background: var(--glass-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-job-form::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, var(--neon-green), transparent);
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eeeeee;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background: rgba(245,245,245,0.9);
+        }
+
+        .form-input:focus {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(247, 0, 255, 0.3);
+        }
+
+        .skill-tag {
+            display: inline-flex;
+            align-items: center;
+            background: var(--main-gradient);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* زر الإضافة */
+        .add-btn {
+            background: var(--main-gradient);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .add-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(188, 197, 28, 0.381);
+        }
+
+        /* اقتراحات الذكاء الاصطناعي */
+        .ai-suggestion {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            padding: 1rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            animation: float 3s ease-in-out infinite;
+            max-width: 300px;
+            display: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .ai-suggestion.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- قسم إضافة وظيفة -->
+        <form class="add-job-form" id="jobForm">
+            <h2 style="color: #4A00E0; margin-bottom: 1.5rem;">➕ إضافة وظيفة جديدة</h2>
+            
+            <div class="form-group">
+                <input type="text" class="form-input" placeholder="المسمى الوظيفي" required>
+            </div>
+
+            <div class="form-group">
+                <textarea class="form-input" rows="4" placeholder="الوصف الوظيفي"></textarea>
+            </div>
+
+            <div class="form-group">
+                <div id="skillsContainer"></div>
+                <input type="text" class="form-input" id="skillInput" placeholder="أضف المهارات (اضغط Enter لإضافة)">
+            </div>
+
+            <button type="submit" class="add-btn">نشر الوظيفة 🚀</button>
+        </form>
+
+        <!-- قسم الوظائف المنشورة -->
+        <div id="jobsList">
+            <h2 style="color: white; text-align: center;">الوظائف المنشورة</h2>
+            <div class="job-card">
+                <h3>مطور ويب خبير</h3>
+                <p>المهارات المطلوبة: <span class="skill-tag">HTML</span> <span class="skill-tag">CSS</span></p>
+                <p>الراتب: $3000 - $5000</p>
+            </div>
+        </div>
+
+        <!-- اقتراحات الذكاء الاصطناعي -->
+        <div class="ai-suggestion" id="aiSuggestion">
+            <h4>🎯 اقتراحات الذكاء الاصطناعي:</h4>
+            <p id="aiText"></p>
+            <button onclick="applyAISuggestions()" style="background: var(--neon-green); border: none; padding: 8px 15px; border-radius: 8px; margin-top: 10px;">تطبيق التغييرات</button>
+        </div>
+    </div>
+
+    <script>
+        // إدارة المهارات
+        const skillInput = document.getElementById('skillInput');
+        const skillsContainer = document.getElementById('skillsContainer');
+
+        skillInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const skill = skillInput.value.trim();
+                if (skill) {
+                    const tag = document.createElement('span');
+                    tag.className = 'skill-tag';
+                    tag.textContent = skill;
+                    skillsContainer.appendChild(tag);
+                    skillInput.value = '';
+                }
+            }
+        });
+
+        // إرسال النموذج
+        document.getElementById('jobForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // محاكاة تحليل الذكاء الاصطناعي
+            showAISuggestions();
+        });
+
+        // عرض اقتراحات الذكاء الاصطناعي
+        function showAISuggestions() {
+            const suggestions = [
+                "اقترح إضافة مهارات تقنية محددة",
+                "زيادة نطاق الراتب لجذب المزيد من المرشحين",
+                "إضافة تفاصيل عن المزايا الإضافية"
+            ];
+            
+            const aiSuggestion = document.getElementById('aiSuggestion');
+            document.getElementById('aiText').textContent = suggestions.join('\n');
+            aiSuggestion.classList.add('show');
+            
+            // إخفاء الاقتراحات بعد 10 ثواني
+            setTimeout(() => {
+                aiSuggestion.classList.remove('show');
+            }, 10000);
+        }
+
+        // تطبيق الاقتراحات
+        function applyAISuggestions() {
+            document.querySelectorAll('.form-input').forEach(input => {
+                input.style.border = '2px solid var(--neon-green)';
+                setTimeout(() => {
+                    input.style.border = '2px solid #eee';
+                }, 2000);
+            });
+        }
+
+        // تأثيرات الإدخال
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', () => {
+                input.parentElement.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام التوظيف الذكي - تسجيل الدخول</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 450px;
+            transition: transform 0.3s ease;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo img {
+            width: 120px;
+            height: auto;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            outline: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .links a:hover {
+            color: #764ba2;
+        }
+
+        .ai-features {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .role-btn.active {
+            border-color: #667eea;
+            background: #f7fafc;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 90%;
+                padding: 25px;
+            }
+        }
+
+        .password-strength {
+            height: 4px;
+            background: #e2e8f0;
+            margin-top: 8px;
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0;
+            background: #48bb78;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='img/ATEF2.jpeg') }}" alt="الذكاء التوظيفي">
+
+        </div>
+
+        <div class="role-selector">
+            <button class="role-btn active" data-role="jobseeker">باحث عن عمل</button>
+            <button class="role-btn" data-role="employer">صاحب عمل</button>
+        </div>
+
+        <form id="loginForm" method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email" class="form-control" name="email" required>
+            </div>
+        
+            <div class="form-group">
+                <label>كلمة المرور</label>
+                <input type="password" class="form-control" name="password" required>
+            </div>
+        
+            <button type="submit" class="btn">تسجيل الدخول</button>
+        </form>
+        
+
+        <div class="links">
+            <a href="نسيت كلمة المرور.html">نسيت كلمة المرور؟</a>
+            <br>
+            <a href="signup.html">إنشاء حساب جديد</a>
+        </div>
+    </div>
+
+    <script>
+        // تفعيل اختيار الدور
+        const roleButtons = document.querySelectorAll('.role-btn');
+        roleButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                roleButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+            });
+        });
+
+        // تحليل قوة كلمة المرور
+        const passwordInput = document.getElementById('password');
+        const strengthBar = document.querySelector('.strength-bar');
+
+        passwordInput.addEventListener('input', () => {
+            const strength = calculatePasswordStrength(passwordInput.value);
+            strengthBar.style.width = `${strength}%`;
+        });
+
+        function calculatePasswordStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) strength += 25;
+            if (/[A-Z]/.test(password)) strength += 25;
+            if (/[0-9]/.test(password)) strength += 25;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+            return Math.min(strength, 100);
+        }
+
+        // التحقق من النموذج
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // إضافة تحقق متقدم باستخدام الذكاء الاصطناعي
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // محاكاة تحقق باستخدام AI
+            if (!isValidEmail(email)) {
+                showError('البريد الإلكتروني غير صحيح');
+                return;
+            }
+
+            if (password.length < 8) {
+                showError('كلمة المرور يجب أن تكون 8 أحرف على الأقل');
+                return;
+            }
+
+            // إرسال البيانات للخادم
+            loginUser(email, password);
+        });
+
+        function isValidEmail(email) {
+            // يمكن استبدال هذا بتحقق أكثر تعقيدا باستخدام AI
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function showError(message) {
+            // إضافة رسالة خطأ متحركة
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            document.body.appendChild(errorDiv);
+
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 3000);
+        }
+
+        // محاكاة تسجيل الدخول
+        async function loginUser(email, password) {
+            // هنا يمكن إضافة اتصال مع API الذكاء الاصطناعي
+            try {
+                // محاكاة تأخير الشبكة
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // محاكاة استجابة ناجحة
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                showError('فشل تسجيل الدخول. الرجاء التحقق من البيانات');
+            }
+        }
+    </script>
+</body>
+</html>

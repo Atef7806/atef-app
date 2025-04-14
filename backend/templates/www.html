@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>وظيفتي AI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(to right, #a100ff, #d14c8b);
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.header .logo {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.header .logo span {
+  color: #ffe600;
+}
+
+.icon, .icon-small {
+  width: 24px;
+  vertical-align: middle;
+}
+
+.search-section {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 30px 20px;
+  border-radius: 20px;
+  max-width: 500px;
+  margin: auto;
+}
+
+.search-section h1 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.highlight {
+  color: #fff;
+  font-weight: bold;
+}
+
+.search-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.search-box input {
+  padding: 12px;
+  border: none;
+  border-radius: 15px;
+  width: 100%;
+  font-size: 16px;
+}
+
+.search-box button {
+  background-color: #d62865;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 15px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Responsive Styling */
+@media (min-width: 600px) {
+  .search-box {
+    flex-direction: row;
+  }
+
+  .search-box input {
+    width: 70%;
+  }
+
+  .search-box button {
+    width: 30%;
+  }
+}
+
+
+</style>
+<body>
+  <header class="header">
+    <div class="logo">وظيفتي <span>ai.</span> <img src="robot.png" alt="AI Icon" class="icon"></div>
+  </header>
+
+  <section class="search-section">
+    <h1>ابحث عن وظيفة أحلامك مع<br><span class="highlight">الذكاء الاصطناعي</span> <img src="robot.png" alt="AI Icon" class="icon-small"></h1>
+    <div class="search-box">
+      <input type="text" placeholder="مهندس بيانات..">
+      <button>بحث ذكي</button>
+    </div>
+  </section>
+</body>
+</html>
+
+

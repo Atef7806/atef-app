@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم نظام التوظيف</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap">
+    
+    <style>
+        /* CSS ستايلات */
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden; /* لمنع التمرير العام */
+        }
+        .sidebar {
+            width: 250px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto; /* جعل الشريط الجانبي قابل للتمرير */
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar ul li {
+            margin: 20px 0;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .sidebar ul li a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(10px);
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto; /* جعل المحتوى الرئيسي قابل للتمرير */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .footer {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+        }
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animated-background {
+            background: linear-gradient(135deg, #6a11cb, #2575fc, #6a11cb, #2575fc,#cb11bb,#e407d1,#d5239d,#07e4d9,#f03872);
+            background-size: 400% 400%;
+            animation: gradientBackground 10s ease infinite;
+        }
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.5s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="animated-background">
+    <div class="dashboard">
+        <div class="header">
+             نظام التوظيف الإلكتروني
+        </div>
+        <div class="main-content">
+            <div class="sidebar">
+                <ul>
+                    <li><a href="{{ url_for('home') }}"> 🏠الرئيسية</a></li>
+                    <li><a href="{{ url_for('job_management') }}"> 💼إدارة الوظائف</a></li>
+                    <li><a href="{{ url_for('manage_applicants') }}"> 📚 إدارة المتقدمين</a></li>
+                    <li><a href="{{ url_for('employment_interviews') }}">🎥 مقابلات التوظيف</a></li>
+                    <li><a href="{{ url_for('smart_search') }}">🔍 البحث الذكي</a></li>
+                    <li><a href="{{ url_for('account_management') }}">🖥️ إدارة الحساب</a></li>
+                    <li><a href="{{ url_for('advertisements') }}"> 🤖الإعلانيات</a></li>
+                    <li><a href="{{ url_for('statistics') }}"> 📈الإحصائيات</a></li>
+                    <li><a href="{{ url_for('notifications') }}">🔔  الإشعارات</a></li>
+                    <li><a href="{{ url_for('customer_support') }}"> 👨دعم العملاء</a></li>
+                    <li><a href="{{ url_for('settings') }}"> ⚙️الإعدادات</a></li>
+                    <li><a href="{{ url_for('log_out') }}">🔒 تسجيل الخروج</a></li>
+                </ul>
+                
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h2>مرحبًا بك في لوحة التحكم</h2>
+                    <p>هنا يمكنك إدارة جميع جوانب نظام التوظيف الخاص بك.</p>
+                </div>
+                
+                <div class="card">
+                    <h2>إحصائيات سريعة</h2>
+                    <p>عدد الوظائف المفتوحة: 15</p>
+                    <p>عدد المتقدمين: 120</p>
+                </div>
+                <div class="card">
+                    <h2>مقابلات قادمة</h2>
+                    <p>مقابلة مع أحمد محمد - 10:00 صباحًا</p>
+                    <p>مقابلة مع سارة علي - 2:00 مساءً</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            © 2025-2024 نظام التوظيف الإلكتروني. جميع الحقوق محفوظة.
+        </div>
+    </div>
+
+    <div class="notification">
+        🔔 لديك إشعار جديد: مقابلة مع أحمد محمد غدًا.
+    </div>
+
+    <script>
+        // JavaScript للتفاعلات الإضافية
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
+
+            // تفاعل البطاقات
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.3)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                });
+            });
+
+            // تفاعل روابط الشريط الجانبي
+            sidebarLinks.forEach(link => {
+                link.addEventListener('mouseenter', () => {
+                    link.style.transform = 'translateX(15px)';
+                });
+                link.addEventListener('mouseleave', () => {
+                    link.style.transform = 'translateX(0)';
+                });
+            });
+
+            // إشعارات تفاعلية
+            setTimeout(() => {
+                const notification = document.querySelector('.notification');
+                notification.style.display = 'none';
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
+

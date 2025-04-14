@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>نظام إدارة المتقدمين الذكي المتكامل</title>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --ai-gradient: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            --glass-bg: rgba(255, 255, 255, 0.98);
+            --neon-accent: #88ff88;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--primary-gradient);
+            background-attachment: fixed;
+            padding: 2rem;
+        }
+
+        /* شريط الفلاتر */
+        .filter-bar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem;
+            border-radius: 25px;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .filter-input {
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background: rgba(245,245,245,0.9);
+        }
+
+        .filter-input:focus {
+            border-color: var(--neon-accent);
+            box-shadow: 0 0 15px rgba(136,255,136,0.3);
+        }
+
+        /* بطاقات المتقدمين */
+        .applicant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .applicant-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .applicant-card:hover {
+            transform: translateY(-10px) rotateX(5deg) rotateY(-5deg);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .applicant-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--ai-gradient);
+            transform: scaleX(0);
+            transition: transform 0.6s ease;
+        }
+
+        .applicant-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        /* تفاصيل المتقدم */
+        .applicant-details {
+            background: var(--glass-bg);
+            border-radius: 30px;
+            padding: 2rem;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .applicant-details.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* تقييم الذكاء الاصطناعي */
+        .ai-radar-chart {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #4ecdc4 0% 30%,
+                #ff6b6b 30% 70%,
+                #ffd700 70% 100%
+            );
+            animation: radar 4s infinite linear;
+        }
+
+        @keyframes radar {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* تحميل الملفات */
+        .file-drop-zone {
+            border: 3px dashed var(--neon-accent);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .file-drop-zone.dragover {
+            background: rgba(136,255,136,0.1);
+            transform: scale(1.05);
+        }
+
+        /* الأزرار التفاعلية */
+        .action-btn {
+            background: var(--ai-gradient);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            animation: btnGlow 3s infinite;
+        }
+
+        @keyframes btnGlow {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- شريط الفلاتر -->
+    <div class="filter-bar">
+        <input type="text" class="filter-input" placeholder="🔍 بحث بالاسم..." id="searchInput">
+        <select class="filter-input" id="statusFilter">
+            <option value="all">جميع الحالات</option>
+            <option value="new">جديد</option>
+            <option value="interview">مقابلة</option>
+            <option value="hired">مُعيّن</option>
+        </select>
+        <input type="range" class="filter-input" id="scoreRange" min="0" max="100" step="5">
+    </div>
+
+    <!-- قائمة المتقدمين -->
+    <div class="applicant-grid" id="applicantGrid"></div>
+
+    <!-- تفاصيل المتقدم -->
+    <div class="applicant-details" id="applicantDetails">
+        <button class="action-btn" onclick="closeDetails()" style="float: left;">✖️ إغلاق</button>
+        <div class="ai-radar-chart"></div>
+        <h2 id="detailName"></h2>
+        
+        <div class="file-drop-zone" id="dropZone">
+            اسحب الملفات هنا أو انقر للتحميل
+            <input type="file" hidden id="fileInput">
+        </div>
+
+        <div class="ai-analysis-section">
+            <h3>📈 تحليل الذكاء الاصطناعي</h3>
+            <div id="aiAnalysis"></div>
+            <button class="action-btn" onclick="startVirtualInterview()">🎥 بدء مقابلة افتراضية</button>
+        </div>
+    </div>
+
+    <script>
+        // بيانات المتقدمين المبدئية
+        let applicants = [
+            {
+                id: 1,
+                name: "محمد أحمد",
+                status: "new",
+                score: 92,
+                skills: ["React", "Node.js", "AI"],
+                cv: "خبرة 5 سنوات في تطوير الأنظمة الذكية..."
+            },
+            {
+                id: 2,
+                name: "فاطمة خالد",
+                status: "interview",
+                score: 88,
+                skills: ["Python", "Data Science", "ML"],
+                cv: "متخصصة في تحليل البيانات والتعلم الآلي..."
+            }
+        ];
+
+        // تهيئة الواجهة
+        function initApp() {
+            const grid = document.getElementById('applicantGrid');
+            grid.innerHTML = applicants.map(applicant => `
+                <div class="applicant-card" onclick="showDetails(${applicant.id})">
+                    <h3>${applicant.name}</h3>
+                    <p>التقييم: <span class="ai-score">${applicant.score}%</span></p>
+                    <div class="status-indicator" style="background: ${getStatusColor(applicant.status)}"></div>
+                </div>
+            `).join('');
+        }
+
+        // عرض التفاصيل
+        function showDetails(id) {
+            const applicant = applicants.find(a => a.id === id);
+            const details = document.getElementById('applicantDetails');
+            document.getElementById('detailName').textContent = applicant.name;
+            document.getElementById('aiAnalysis').innerHTML = generateAIAnalysis(applicant);
+            details.classList.add('active');
+            playSound('open');
+        }
+
+        function closeDetails() {
+            document.getElementById('applicantDetails').classList.remove('active');
+            playSound('close');
+        }
+
+        // توليد تحليل الذكاء الاصطناعي
+        function generateAIAnalysis(applicant) {
+            return `
+                <div class="ai-analysis">
+                    <p>• التوافق مع الوظيفة: ${applicant.score}%</p>
+                    <p>• نقاط القوة: ${applicant.skills.join(', ')}</p>
+                    <p>• التوصية: ${applicant.score > 90 ? 'مُرشح قوي' : 'يحتاج تقييم'}</p>
+                </div>
+            `;
+        }
+
+        // إدارة الملفات
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            handleFiles(e.dataTransfer.files);
+        });
+
+        function handleFiles(files) {
+            // محاكاة تحميل الملفات إلى السحابة
+            playSound('upload');
+            alert('تم تحميل ' + files.length + ' ملفات بنجاح');
+        }
+
+        // المؤثرات الصوتية
+        function playSound(type) {
+            const sounds = {
+                open: 'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3',
+                close: 'https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3',
+                upload: 'https://assets.mixkit.co/active_storage/sfx/2573/2573-preview.mp3'
+            };
+            const audio = new Audio(sounds[type]);
+            audio.play();
+        }
+
+        // المقابلة الافتراضية
+        function startVirtualInterview() {
+            // محاكاة اتصال فيديو
+            const meetingWindow = window.open('', '_blank', 'width=800,height=600');
+            meetingWindow.document.write(`
+                <h1>جلسة مقابلة افتراضية</h1>
+                <video id="localVideo" autoplay muted></video>
+                <video id="remoteVideo" autoplay></video>
+            `);
+        }
+
+        // التصفية والبحث
+        document.getElementById('searchInput').addEventListener('input', filterApplicants);
+        document.getElementById('statusFilter').addEventListener('change', filterApplicants);
+        document.getElementById('scoreRange').addEventListener('input', filterApplicants);
+
+        function filterApplicants() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+            const score = document.getElementById('scoreRange').value;
+
+            applicants.forEach(applicant => {
+                const card = document.querySelector(`.applicant-card[onclick="showDetails(${applicant.id})"]`);
+                const matches = 
+                    applicant.name.toLowerCase().includes(search) &&
+                    (status === 'all' || applicant.status === status) &&
+                    applicant.score >= score;
+                
+                card.style.display = matches ? 'block' : 'none';
+            });
+        }
+
+        // الدوال المساعدة
+        function getStatusColor(status) {
+            const colors = {
+                new: '#ff6b6b',
+                interview: '#4ecdc4',
+                hired: '#88ff88'
+            };
+            return colors[status] || '#ccc';
+        }
+
+        // بدء التطبيق
+        initApp();
+    </script>
+</body>
+</html>

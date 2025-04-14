@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>وظفني - نظام التوظيف الذكي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css">
+
+<script defer src="https://pyscript.net/alpha/pyscript.js"></script>"
+
+    <style>
+        :root {
+            --primary-color: #1a1a2e;
+            --secondary-color: #16213e;
+            --accent-color: #e94560;
+            --gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: var(--gradient);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            animation: fadeInDown 1s;
+            
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            text-shadow: 0 0 15px var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            text-overflow: clip;
+            
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s;
+            
+        }
+
+        .nav-links a:hover {
+            background: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        .hero-section {
+            margin-top: 5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .search-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+            transform: translateY(50px);
+            animation: floatUp 1s forwards;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1.5rem;
+            border: none;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 30px var(--accent-color);
+            transform: scale(1.02);
+        }
+
+        .search-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 30px;
+            background: var(--accent-color);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .search-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px var(--accent-color);
+        }
+
+        .hero-image {
+            margin-top: 5rem;
+            position: relative;
+            height: 600px;
+            overflow: hidden;
+            border-radius: 30px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.3);
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: imageFloat 8s infinite;
+        }
+
+        .ai-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 5rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 30px var(--accent-color);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floatUp {
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes imageFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 5rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            animation: fadeIn 1s forwards;
+            opacity: 0;
+        }
+
+        .stat-item:nth-child(1) { animation-delay: 0.2s; }
+        .stat-item:nth-child(2) { animation-delay: 0.4s; }
+        .stat-item:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                
+                
+            }
+            .hero-image {
+                height: 300px;
+            }
+        }
+
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6584;
+            --accent: #00BFA6;
+            --dark: #2D3436;
+            --light: #F8F9FA;
+            --gradient: linear-gradient(45deg, #6C63FF 0%, #FF6584 100%);
+        }
+
+        .smart-footer {
+            background: var(--gradient);
+            color: white;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+            margin-top: 5rem;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .footer-wave {
+            position: absolute;
+            top: -80px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 1440 320' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23ffffff' d='M0 128L60 117.3C120 107 240 85 360 112C480 139 600 213 720 218.7C840 224 960 160 1080 138.7C1200 117 1320 139 1380 149.3L1440 160L1440 0L1380 0C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0L0 0Z'/%3E%3C/svg%3E");
+            animation: wave 12s infinite linear;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .social-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.1);
+            background: var(--accent);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .social-icon::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.2), transparent);
+            animation: ripple 1.5s infinite;
+        }
+
+        .newsletter-form {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .newsletter-input {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 30px;
+            margin-top: 1rem;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-input:focus {
+            outline: none;
+            background: rgba(255,255,255,0.2);
+            box-shadow: 0 0 15px rgba(255,255,255,0.2);
+        }
+
+        .subscribe-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subscribe-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,191,166,0.4);
+        }
+
+        .footer-copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @keyframes wave {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(-50px); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+            }
+
+            .social-icon {
+                width: 40px;
+                height: 40px;
+            }
+        }
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin: 15px 0;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .footer-links a:hover {
+            color: #ffe66d;
+            padding-left: 10px;
+        }
+
+        .apply-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            background: linear-gradient(45deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin: 2rem auto;
+            display: block;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .apply-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        .apply-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(45deg);
+            transition: 0.5s;
+        }
+
+        .apply-button:hover::after {
+            left: 120%;
+        }
+
+       a{
+        text-decoration: none;
+       }
+
+
+
+/* Navbar الأساسي */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: transparent;
+  color: white;
+  flex-wrap: wrap;
+}
+
+/* لوجو */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* الروابط */
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* زر القائمة للموبايل */
+.menu-toggle {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-links a {
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+}
+
+  
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <div class="logo"> 🤖 وظفني.ai</div>
+            <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
+ي
+            <div class="nav-links">
+                <a href="{{ url_for('features') }}">المميزات</a>
+<a href="{{ url_for('jobs') }}">الوظائف</a>
+<a href="{{ url_for('seeker_profile') }}">الباحث عن عمل</a>
+<a href="{{ url_for('companies') }}">الشركات</a>
+<a href="{{ url_for('login') }}">تسجيل الدخول</a>
+<a href="{{ url_for('signup') }}">إنشاء حساب</a>
+
+
+            </div>
+        </nav>
+
+        <section class="hero-section">
+            <div class="search-container">
+                <h1 style="margin-bottom: 2rem;">ابحث عن وظيفة أحلامك مع الذكاء الاصطناعي 🤖</h1>
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="ما الوظيفة التي تبحث عنها؟">
+                    <button class="search-btn">بحث ذكي</button>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <h3>+1M</h3>
+                        <p>وظيفة متاحة</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>98%</h3>
+                        <p>دقة التوصيات</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>24/7</h3>
+                        <p>دعم بالذكاء الاصطناعي</p>
+                    </div>
+                </div>
+            </div>
+                
+                <div class="ai-features">
+                    <div class="feature-card">
+                        <h3>مطابقة ذكية</h3>
+                        <p>نظام مطابقة الوظائف باستخدام التعلم العميق</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>تحليل السيرة الذاتية</h3>
+                        <p>تحليل CV ذكي مع نصائح تحسينية</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>مقابلات افتراضية</h3>
+                        <p>تمارين مقابلات مع مساعد افتراضي</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+<br>
+<br>
+
+<a href="{{ url_for('employment_application') }}">
+    <button class="apply-button">تقديم الآن</button>
+  </a>
+  
+
+    <!-- محتوى الصفحة الرئيسية هنا -->
+    
+    <footer class="smart-footer">
+        <div class="footer-wave"></div>
+        <footer class="creative-footer color-animation">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('home') }}">🏠 الصفحة الرئيسية</a></li>
+<li><a href="{{ url_for('who_are_you') }}">📝 من نحن</a></li>
+<li><a href="{{ url_for('services') }}">📱 الخدمات</a></li>
+<li><a href="{{ url_for('contact_us') }}">📞 اتصل بنا</a></li>
+
+                    </ul>
+                </div>
+    <hr>
+        <div class="footer-content">
+            <div class="social-section">
+                <h3>تواصل معنا</h3>
+                <div class="social-links">
+                    <a href="#" class="social-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white">
+                            <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white">
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white">
+                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+<hr>
+            <div class="newsletter-form">
+                <h3>اشترك في النشرة البريدية</h3>
+                <input type="email" class="newsletter-input" placeholder="بريدك الإلكتروني">
+                <button class="subscribe-btn">اشترك الآن</button>
+            </div>
+        </div>
+<hr>
+        <div class="footer-copyright">
+            <p>© 2024-2025 جميع الحقوق محفوظة| صمم بحب ❤️</p> 
+        </div>
+    </footer>
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Dynamic background effect
+            document.addEventListener('mousemove', (e) => {
+                const x = e.clientX / window.innerWidth;
+                const y = e.clientY / window.innerHeight;
+                document.body.style.background = `
+                    linear-gradient(135deg, 
+                    hsl(${x * 360}, 70%, 50%),
+                    hsl(${y * 360}, 70%, 50%))
+                `;
+            });
+
+            // Animated search placeholder
+            new Typed('.search-input', {
+                strings: [
+                    'مطور ويب...',
+                    'مهندس بيانات...',
+                    'مصمم جرافيك...',
+                    'مدير مشاريع...'
+                ],
+                attr: 'placeholder',
+                typeSpeed: 50,
+                backSpeed: 30,
+                loop: true
+            });
+
+            // Scroll animations
+            window.addEventListener('scroll', () => {
+                document.querySelectorAll('.stat-item').forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight * 0.8) {
+                        el.style.opacity = '1';
+                    }
+                });
+            });
+
+            // Search button interaction
+            document.querySelector('.search-btn').addEventListener('click', () => {
+                confetti({
+                    particleCount: 150,
+                    spread: 100,
+                    origin: { y: 0.6 }
+                });
+            });
+        });
+
+                // تفعيل تأثيرات الشريحة
+                document.querySelectorAll('.social-icon').forEach(icon => {
+            icon.addEventListener('mouseover', () => {
+                icon.style.transform = 'rotate(360deg) scale(1.2)';
+                icon.style.transition = 'all 0.5s ease';
+            });
+
+            icon.addEventListener('mouseout', () => {
+                icon.style.transform = 'rotate(0deg) scale(1)';
+            });
+        });
+
+        // تفعيل إرسال النشرة البريدية
+        document.querySelector('.subscribe-btn').addEventListener('click', function() {
+            this.innerHTML = 'جاري الإرسال... <div class="loader"></div>';
+            setTimeout(() => {
+                this.innerHTML = '✅ تم الاشتراك بنجاح!';
+                this.style.background = 'var(--accent)';
+            }, 2000);
+        });
+
+        // تأثير التمرير للفوتر
+        window.addEventListener('scroll', () => {
+            const footer = document.querySelector('.smart-footer');
+            const scrollPosition = window.pageYOffset;
+            footer.style.transform = `translateY(${scrollPosition * 0.1}px)`;
+        });
+
+        // تأثير المؤشر عند التواجد فوق أيقونات التواصل
+        document.addEventListener('mousemove', (e) => {
+            document.querySelectorAll('.social-icon').forEach(icon => {
+                const rect = icon.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                icon.style.setProperty('--x', `${x}px`);
+                icon.style.setProperty('--y', `${y}px`);
+            });
+        });
+
+
+
+        // تأثير زر التقديم
+        document.querySelector('.apply-button').addEventListener('click', function(e) {
+            let ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            this.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 500);
+        });
+
+        // تهيئة الصفحة
+        window.onload = createJobCards;
+
+        function toggleMenu() {
+    document.querySelector('.nav-links').classList.toggle('active');
+  }
+
+    </script>
+</body>
+</html>

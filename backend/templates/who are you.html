@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام التوظيف الذكي - من نحن</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0a0a2e;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .ai-header {
+            background: linear-gradient(45deg, #2a2a5e, #0a0a2e);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-header::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 50%, rgba(74, 144, 226, 0.1));
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header-content {
+            text-align: center;
+            z-index: 1;
+            position: relative;
+        }
+
+        .ai-title {
+            font-size: 4em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00ff88, #00a3ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from { text-shadow: 0 0 10px rgba(0, 255, 136, 0.5); }
+            to { text-shadow: 0 0 30px rgba(0, 163, 255, 0.8); }
+        }
+
+        .ai-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 50px 5%;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, #59ebf0, transparent);
+            animation: borderFlow 4s linear infinite;
+        }
+
+        @keyframes borderFlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .ai-advantages {
+            padding: 100px 5%;
+            position: relative;
+            background: linear-gradient(45deg, #1a1a4a, #0a0a2e);
+        }
+
+        .floating-ai {
+            position: absolute;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.1;
+            font-size: 10em;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 40px 0;
+        }
+
+        .timeline-item {
+            padding: 20px;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: all 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .timeline-item:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .team-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 50px 5%;
+        }
+
+        .team-member {
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .member-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 3px solid #00ff88;
+            transition: all 0.3s;
+        }
+
+        .team-member:hover .member-photo {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #00ff88;
+        }
+
+        .ai-particle {
+            position: fixed;
+            pointer-events: none;
+            background: rgba(0, 255, 136, 0.6);
+            border-radius: 50%;
+            animation: particle 1s ease-out forwards;
+        }
+
+        @keyframes particle {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .ai-title { font-size: 2.5em; }
+            .floating-ai { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header class="ai-header">
+        <div class="header-content">
+            <h1 class="ai-title">نظام التوظيف الذكي</h1>
+            <p class="ai-slogan">تقنية المستقبل في توظيف الكفاءات</p>
+        </div>
+    </header>
+
+    <section class="ai-features">
+        <div class="feature-card">
+            <i class="fas fa-brain fa-3x"></i>
+            <h3>تحليل ذكي للسير الذاتية</h3>
+            <p>تقنية الذكاء الاصطناعي المتقدمة لتحليل وفهم السير الذاتية بدقة عالية</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-robot fa-3x"></i>
+            <h3>مقابلات افتراضية</h3>
+            <p>نظام مقابلات تفاعلي مدعوم بالذكاء الاصطناعي لاختبار المهارات</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-chart-line fa-3x"></i>
+            <h3>توصيات ذكية</h3>
+            <p>خوارزميات تنبؤية لاختيار أفضل المرشحين للوظيفة</p>
+        </div>
+    </section>
+
+    <section class="ai-advantages">
+        <div class="timeline">
+            <div class="timeline-item">
+                <h3>مرحلة التقديم الذكية</h3>
+                <p>نظام تقديم ذكي مع تحليل فوري للسيرة الذاتية</p>
+            </div>
+            <div class="timeline-item">
+                <h3>التقييم الآلي</h3>
+                <p>تحليل المهارات والخبرات باستخدام خوارزميات متقدمة</p>
+            </div>
+            <div class="timeline-item">
+                <h3>المقابلة الافتراضية</h3>
+                <p>تفاعل حقيقي مع مساعد افتراضي ذكي</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // تأثيرات الجسيمات
+        document.addEventListener('click', function(e) {
+            const particle = document.createElement('div');
+            particle.className = 'ai-particle';
+            particle.style.left = e.clientX + 'px';
+            particle.style.top = e.clientY + 'px';
+            document.body.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 1000);
+        });
+
+        // تأثيرات التمرير
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            document.documentElement.style.setProperty('--scroll', scrolled);
+        });
+
+        // تأثيرات العناصر عند الظهور
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.feature-card, .timeline-item').forEach(el => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(50px)';
+            observer.observe(el);
+        });
+
+        // تأثيرات حركة الماوس
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            document.documentElement.style.setProperty('--mouse-x', x);
+            document.documentElement.style.setProperty('--mouse-y', y);
+        });
+    </script>
+</body>
+</html>

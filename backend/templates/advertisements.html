@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الإعلانات الذكية - نظام التوظيف الذكي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6C5CE7;
+            --secondary-color: #A8A5E6;
+            --accent-color: #FFD700;
+            --dark-color: #2D3436;
+            --gradient: linear-gradient(135deg, #6C5CE7 0%, #A8A5E6 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: var(--gradient);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .neon-border {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                var(--accent-color) 10px,
+                var(--accent-color) 20px
+            );
+            opacity: 0.1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .jobs-header {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+            animation: glow 2s infinite alternate;
+        }
+
+        .ai-filters {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .filter-chip {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-chip:hover {
+            transform: scale(1.05) rotate(-3deg);
+            box-shadow: 0 0 15px var(--accent-color);
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .job-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            transform-style: preserve-3d;
+        }
+
+        .job-card:hover {
+            transform: translateY(-10px) rotateX(10deg) rotateY(-5deg);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .job-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.4),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .job-card:hover::before {
+            left: 100%;
+        }
+
+        .ai-match-badge {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            background: var(--accent-color);
+            color: var(--dark-color);
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            font-weight: bold;
+            transform: rotate(-15deg);
+            animation: badgePulse 2s infinite;
+        }
+
+        .salary-glow {
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(108, 92, 231, 0.5);
+        }
+
+        .skills-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .skill-tag {
+            background: var(--secondary-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px var(--primary-color); }
+            to { text-shadow: 0 0 20px var(--accent-color), 0 0 10px var(--primary-color); }
+        }
+
+        @keyframes badgePulse {
+            0% { transform: rotate(-15deg) scale(1); }
+            50% { transform: rotate(-15deg) scale(1.1); }
+            100% { transform: rotate(-15deg) scale(1); }
+        }
+
+        .ai-sorting {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: rgba(255,255,255,0.95);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .sort-option {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sort-option:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .job-details-preview {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 0 50px rgba(0,0,0,0.3);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        .preview-visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+    </style>
+</head>
+<body>
+    <div class="neon-border"></div>
+    
+    <div class="container">
+        <header class="jobs-header">
+            <h1>وظائف تناسب مهاراتك ⚡</h1>
+            <p>اكتشف الفرص المثالية المطابقة لملفك الشخصي باستخدام الذكاء الاصطناعي</p>
+        </header>
+
+        <div class="ai-filters">
+            <div class="filter-chip">
+                <i class="fas fa-robot"></i>
+                التوصيات الذكية
+            </div>
+            <div class="filter-chip">
+                <i class="fas fa-bolt"></i>
+                المطابقة الفورية
+            </div>
+            <div class="filter-chip">
+                <i class="fas fa-chart-line"></i>
+                الراتب التنافسي
+            </div>
+        </div>
+
+        <div class="ai-sorting">
+            <span>الترتيب بواسطة الذكاء الاصطناعي:</span>
+            <div class="sort-option">الأكثر ملاءمة</div>
+            <div class="sort-option">الأحدث</div>
+            <div class="sort-option">الأعلى راتبًا</div>
+        </div>
+
+        <div class="jobs-grid" id="jobsGrid">
+            <!-- سيتم إدراج الوظائف هنا عبر الجافاسكريبت -->
+        </div>
+
+        <div class="job-details-preview" id="jobPreview">
+            <button onclick="closePreview()" style="position: absolute; top: 1rem; left: 1rem">✖</button>
+            <h2 id="previewTitle"></h2>
+            <div id="previewContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات الوظائف المزيفة
+        const jobs = [
+            {
+                title: "مطور ويب متقدم",
+                company: "شركة التكنولوجيا الرائدة",
+                salary: "25,000 - 35,000 ر.س",
+                skills: ["HTML5", "CSS3", "JavaScript", "React", "Node.js"],
+                match: 92,
+                type: "دوام كامل"
+            },
+            {
+                title: "مصمم UX/UI",
+                company: "استوديو الإبداع الرقمي",
+                salary: "18,000 - 28,000 ر.س",
+                skills: ["Figma", "Adobe XD", "Prototyping", "User Research"],
+                match: 85,
+                type: "عمل حر"
+            },
+            {
+                title: "مهندس بيانات",
+                company: "منصة التحليلات الذكية",
+                salary: "30,000 - 40,000 ر.س",
+                skills: ["Python", "SQL", "Big Data", "Machine Learning"],
+                match: 95,
+                type: "دوام جزئي"
+            }
+        ];
+
+        // توليد بطاقات الوظائف
+        function generateJobCards() {
+            const grid = document.getElementById('jobsGrid');
+            grid.innerHTML = jobs.map(job => `
+                <div class="job-card" onclick="showPreview('${job.title}')">
+                    ${job.match > 90 ? `<div class="ai-match-badge">${job.match}% تطابق</div>` : ''}
+                    <h3>${job.title}</h3>
+                    <p>${job.company}</p>
+                    <div class="salary-glow">${job.salary}</div>
+                    <div class="skills-tags">
+                        ${job.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                    </div>
+                    <div style="margin-top: 1rem; color: var(--primary-color)">
+                        <i class="fas fa-clock"></i> ${job.type}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // عرض تفاصيل الوظيفة
+        function showPreview(title) {
+            const job = jobs.find(j => j.title === title);
+            const preview = document.getElementById('jobPreview');
+            document.getElementById('previewTitle').textContent = title;
+            document.getElementById('previewContent').innerHTML = `
+                <h3>${job.company}</h3>
+                <p>نوع الوظيفة: ${job.type}</p>
+                <p>المهارات المطلوبة: ${job.skills.join(', ')}</p>
+                <p>الراتب: ${job.salary}</p>
+                <button style="background: var(--primary-color); color: white; padding: 1rem 2rem; border: none; border-radius: 15px; margin-top: 1rem; cursor: pointer">
+                    التقديم الآن <i class="fas fa-paper-plane"></i>
+                </button>
+            `;
+            preview.classList.add('preview-visible');
+        }
+
+        function closePreview() {
+            document.getElementById('jobPreview').classList.remove('preview-visible');
+        }
+
+        // تأثيرات التمرير
+        window.addEventListener('scroll', () => {
+            document.documentElement.style.setProperty('--gradient', 
+                `linear-gradient(${window.scrollY/10}deg, #6C5CE7 0%, #A8A5E6 100%)`);
+        });
+
+        // تهيئة الصفحة
+        window.addEventListener('load', () => {
+            generateJobCards();
+            document.querySelectorAll('.job-card').forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+
+        // محاكاة البحث بالذكاء الاصطناعي
+        document.querySelectorAll('.sort-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.sort-option').forEach(o => o.style.background = '');
+                this.style.background = var(--primary-color);
+                this.style.color = 'white';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الخروج الذكي - نظام التوظيف الذكي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6C5CE7;
+            --secondary-color: #A8A5E6;
+            --accent-color: #e98aeb;
+            --dark-color: #0a0a0a;
+            --gradient: linear-gradient( #fbf5fa , #dc4fe6 );
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: var(--gradient);
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logout-portal {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background: repeating-radial-gradient(
+                circle at 50% 50%,
+                rgba(255,215,0,0.1),
+                rgba(108,92,231,0.1) 20px
+            );
+            z-index: 0;
+        }
+
+        .logout-container {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logout-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            transform-style: preserve-3d;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logout-card:hover {
+            transform: rotateY(10deg) rotateX(5deg) translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+
+        .logout-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                var(--accent-color),
+                transparent
+            );
+            animation: borderFlow 4s linear infinite;
+        }
+
+        .ai-farewell {
+            font-size: 2.5rem;
+            margin: 2rem 0;
+            animation: pulse 2s infinite;
+        }
+
+        .logout-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+
+        .logout-btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logout-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.3),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .logout-btn:hover::before {
+            left: 100%;
+        }
+
+        #confirmLogout {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        #cancelLogout {
+            background: var(--accent-color);
+            color: var(--dark-color);
+        }
+
+        .countdown {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            color: var(--dark-color);
+            animation: countdownPulse 1s infinite;
+        }
+
+        .user-profile {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-color);
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            transform: scale(1.1) rotate(360deg);
+            box-shadow: 0 0 25px var(--accent-color);
+        }
+
+        @keyframes borderFlow {
+            0% { transform: rotate(45deg) translateX(-100%); }
+            100% { transform: rotate(45deg) translateX(100%); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes countdownPulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .feedback-options {
+            position: fixed;
+            bottom: 2rem;
+            background: rgba(255,255,255,0.95);
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            display: none;
+            gap: 1rem;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .emoji-option {
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .emoji-option:hover {
+            transform: scale(1.2) rotate(15deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="logout-portal"></div>
+    
+    <div class="logout-container">
+        <div class="logout-card">
+            <div class="ai-farewell">🤖</div>
+            <img src="{{ url_for('static', filename='img/ATEFAELSAYED.jpeg') }}" class="user-profile" alt="صورة المستخدم">
+
+            <h1>وداعًا، أحمد!</h1>
+            <p>نتمنى لك يومًا سعيدًا 😊</p>
+            <div class="countdown" id="countdown">سيتم تسجيل الخروج تلقائيًا خلال 10 ثواني</div>
+            
+            <div class="logout-buttons">
+                <button class="logout-btn" id="confirmLogout" onclick="performLogout()">
+                    <i class="fas fa-sign-out-alt"></i> تأكيد الخروج
+                </button>
+                <button class="logout-btn" id="cancelLogout" onclick="cancelLogout()">
+                    <i class="fas fa-undo"></i> البقاء متصلًا
+                </button>
+            </div>
+        </div>
+
+        <div class="feedback-options" id="feedbackOptions">
+            <span class="emoji-option" onclick="submitFeedback('😍')">😍</span>
+            <span class="emoji-option" onclick="submitFeedback('😊')">😊</span>
+            <span class="emoji-option" onclick="submitFeedback('😐')">😐</span>
+            <span class="emoji-option" onclick="submitFeedback('😞')">😞</span>
+        </div>
+    </div>
+
+    <script>
+        // العد التنازلي التلقائي
+        let count = 10;
+        const countdownElement = document.getElementById('countdown');
+        
+        const countdown = setInterval(() => {
+            count--;
+            countdownElement.textContent = `سيتم تسجيل الخروج تلقائيًا خلال ${count} ثواني`;
+            
+            if(count <= 0) {
+                performLogout();
+            }
+        }, 1000);
+
+        // تنفيذ عملية تسجيل الخروج
+        function performLogout() {
+            clearInterval(countdown);
+            document.querySelector('.logout-card').style.transform = 'rotateY(180deg) scale(0)';
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 1000);
+            
+            // عرض خيارات التقييم
+            document.getElementById('feedbackOptions').style.display = 'flex';
+        }
+
+        // إلغاء عملية تسجيل الخروج
+        function cancelLogout() {
+            clearInterval(countdown);
+            document.querySelector('.logout-card').style.transform = 'scale(0)';
+            setTimeout(() => {
+                window.location.href = '/dashboard';
+            }, 500);
+        }
+
+        // إرسال التقييم
+        function submitFeedback(emoji) {
+            document.getElementById('feedbackOptions').style.animation = 'slideUp 0.5s ease reverse';
+            setTimeout(() => {
+                document.getElementById('feedbackOptions').style.display = 'none';
+            }, 500);
+            
+            // محاكاة إرسال البيانات
+            console.log('التقييم المختار:', emoji);
+        }
+
+        // تفاعلات إضافية
+        document.querySelector('.user-profile').addEventListener('mouseenter', function() {
+            this.style.boxShadow = '0 0 30px var(--accent-color)';
+        });
+
+        document.querySelector('.user-profile').addEventListener('mouseleave', function() {
+            this.style.boxShadow = 'none';
+        });
+    </script>
+</body>
+</html>

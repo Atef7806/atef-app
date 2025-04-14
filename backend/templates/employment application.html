@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام التوظيف الإلكتروني</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<style>
+    
+/* إعدادات عامة */
+* {
+    margin: 1;
+    padding: 1;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background: linear-gradient(135deg, #4A90E2, #50E3C2);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+}
+
+/* الحاوية الأساسية */
+.container {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 25px 30px;
+    max-width: 900px;
+    width: 100%;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+/* العنوان */
+h1 {
+    font-size: 36px;
+    text-align: center;
+    color: #4A90E2;
+    background: linear-gradient(to right, #4A90E2, #50E3C2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+    animation: slideIn 1s ease-out;
+}
+
+h2 {
+    color: #4A90E2;
+    font-size: 24px;
+    border-bottom: 3px solid #4A90E2;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* الحقول */
+label {
+    display: block;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 5px;
+    border: 2px solid #ddd;
+    font-size: 16px;
+    outline: none;
+    transition: 0.3s ease-in-out;
+}
+
+input:focus, select:focus {
+    border-color: #4A90E2;
+    box-shadow: 0 0 8px #4A90E2;
+}
+
+/* الأزرار */
+button {
+    background: linear-gradient(135deg, #4A90E2, #50E3C2);
+    color: #fff;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    margin-top: 15px;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #50E3C2, #4A90E2);
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* الجدول */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background: linear-gradient(135deg, #4A90E2, #50E3C2);
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+table td {
+    background-color: #f9f9f9;
+}
+
+table tr:nth-child(even) td {
+    background-color: #f1f1f1;
+}
+
+/* الحركات */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* تنسيق متجاوب */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 28px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    input, select, button {
+        font-size: 14px;
+    }
+
+    table th, table td {
+        font-size: 12px;
+    }
+}
+
+
+
+.cv-upload-area {
+            border: 3px dashed #e0e0e0;
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cv-upload-area:hover {
+            border-color: var(--accent-color);
+            background: rgba(255, 107, 107, 0.05);
+        }
+
+        .cv-upload-area.active {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.98); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(0.98); }
+        }
+
+        .upload-preview {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ai-analysis {
+            background: var(--main-gradient);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-top: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .ai-analysis.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin: 0.3rem;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+       
+</style>
+<body>
+    <div class="container">
+        <header>
+            <h1>نموذج طلب توظيف</h1>
+            <p>الرجاء ملء البيانات المطلوبة بعناية لضمان معالجة طلبك.</p>
+        </header>
+
+        <form id="jobApplicationForm">
+            <!-- Personal Information Section -->
+            <section class="form-section">
+                <h2>البيانات الشخصية</h2>
+                <div class="form-grid">
+                    <label>الاسم الكامل: <input type="text" name="fullName" placeholder="اكتب اسمك الكامل" required></label>
+                    <label>الجنسية: <input type="text" name="nationality" placeholder="اكتب جنسيتك" required></label>
+                    <label>تاريخ الميلاد: <input type="date" name="birthDate" required></label>
+                    <label>الدين: <input type="text" name="religion" placeholder="اختياري"></label>
+                    <label>الجنس: 
+                        <select name="gender" required>
+                            <option value="">اختر</option>
+                            <option value="male">ذكر</option>
+                            <option value="female">أنثى</option>
+                        </select>
+                    </label>
+                    <label>الحالة الاجتماعية: <input type="text" name="maritalStatus" placeholder="مثل: أعزب/متزوج"></label>
+                </div>
+            </section>
+
+            <!-- Contact Information Section -->
+            <section class="form-section">
+                <h2>بيانات الاتصال</h2>
+                <div class="form-grid">
+                    <label>العنوان: <input type="text" name="address" placeholder="اكتب عنوانك"></label>
+                    <label>رقم الهاتف: <input type="tel" name="phone" placeholder="رقم هاتفك" required></label>
+                    <label>هل تعمل حاليًا؟ 
+                        <select name="currentlyEmployed">
+                            <option value="">اختر</option>
+                            <option value="yes">نعم</option>
+                            <option value="no">لا</option>
+                        </select>
+                    </label>
+                </div>
+            </section>
+
+            <!-- Educational Information Section -->
+            <section class="form-section">
+                <h2>البيانات التعليمية</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الشهادة</th>
+                            <th>التقدير</th>
+                            <th>التخصص</th>
+                            <th>الجامعة/المدرسة</th>
+                            <th>الدولة</th>
+                            <th>تاريخ التخرج</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" name="certificate" placeholder="مثل: بكالوريوس"></td>
+                            <td><input type="text" name="grade" placeholder="مثل: جيد جدًا"></td>
+                            <td><input type="text" name="major" placeholder="مثل: هندسة"></td>
+                            <td><input type="text" name="university" placeholder="اسم الجامعة"></td>
+                            <td><input type="text" name="country" placeholder="الدولة"></td>
+                            <td><input type="date" name="graduationDate"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <br>
+           <br>
+           <br>
+           <br>
+           <br>
+           <br>
+           <br>
+            <div class="cv-upload-area" id="dropZone">
+                <i class="fas fa-cloud-upload-alt fa-3x"></i>
+                <h2>اسحب وأفلت السيرة الذاتية هنا</h2>
+                <p>أو <span class="accent-text">انقر للاختيار</span></p>
+                <input type="file" id="cvInput" hidden accept=".pdf,.doc,.docx">
+                <div class="upload-preview" id="filePreview"></div>
+            </div>
+
+            <div class="ai-analysis" id="aiAnalysis">
+                <h3>تحليل الذكاء الاصطناعي:</h3>
+                <div class="match-percent">التطابق: <span>85%</span></div>
+                <div class="skills-container" id="skills"></div>
+            </div>
+
+            <button type="submit" class="submit-btn">إرسال الطلب 🚀</button>
+        </form>
+    </div>
+</div>
+
+           
+<script>
+    document.getElementById('jobApplicationForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    let form = event.target;
+
+    // Validate if all required fields are filled
+    let requiredFields = form.querySelectorAll('input[required], select[required]');
+    let allFilled = Array.from(requiredFields).every(input => input.value.trim() !== '');
+    
+    if (allFilled) {
+        alert('تم إرسال النموذج بنجاح!');
+        form.reset();
+    } else {
+        alert('يرجى ملء جميع الحقول المطلوبة.');
+    }
+});
+
+
+
+
+// تفاعلات رفع الملف
+const dropZone = document.getElementById('dropZone');
+        const cvInput = document.getElementById('cvInput');
+        const filePreview = document.getElementById('filePreview');
+        const aiAnalysis = document.getElementById('aiAnalysis');
+
+        dropZone.addEventListener('click', () => cvInput.click());
+
+        ['dragover', 'dragenter'].forEach(event => {
+            dropZone.addEventListener(event, (e) => {
+                e.preventDefault();
+                dropZone.classList.add('active');
+            });
+        });
+
+        ['dragleave', 'drop'].forEach(event => {
+            dropZone.addEventListener(event, (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('active');
+            });
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            const files = e.dataTransfer.files;
+            handleFile(files[0]);
+        });
+
+        cvInput.addEventListener('change', (e) => {
+            handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            if (file) {
+                filePreview.style.display = 'block';
+                filePreview.innerHTML = `
+                    <i class="fas fa-file-alt"></i>
+                    <p>${file.name}</p>
+                `;
+                
+                // محاكاة تحليل الذكاء الاصطناعي
+                setTimeout(() => {
+                    aiAnalysis.classList.add('show');
+                    generateSkills();
+                }, 1500);
+            }
+        }
+
+        // توليد مهارات عشوائية
+        function generateSkills() {
+            const skills = ['تطوير الويب', 'تصميم UX/UI', 'إدارة المشاريع', 'تحليل البيانات', 
+                          'التسويق الرقمي', 'الذكاء الاصطناعي', 'التعلم الآلي'];
+            const skillsContainer = document.getElementById('skills');
+            
+            skillsContainer.innerHTML = skills
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 5)
+                .map(skill => `<div class="skill-tag">${skill}</div>`)
+                .join('');
+        }
+
+        // تفاعلات إرسال النموذج
+        document.getElementById('jobForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'success',
+                title: 'تم الإرسال بنجاح!',
+                text: 'سيتم مراجعة طلبك بواسطة الذكاء الاصطناعي',
+                confirmButtonColor: '#6a11cb'
+            });
+        });
+
+        // تأثيرات الجسيمات الخلفية
+        function initParticles() {
+            const particles = document.querySelector('.particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.style = `
+                    position: absolute;
+                    width: ${Math.random() * 8 + 2}px;
+                    height: ${Math.random() * 8 + 2}px;
+                    background: ${i % 2 === 0 ? '#6a11cb' : '#2575fc'};
+                    border-radius: 50%;
+                    opacity: ${Math.random() * 0.5 + 0.2};
+                    top: ${Math.random() * 100}%;
+                    left: ${Math.random() * 100}%;
+                    animation: float ${Math.random() * 10 + 5}s infinite;
+                `;
+                particles.appendChild(particle);
+            }
+        }
+        initParticles();
+</script>
+
+    
+</body>
+</html>

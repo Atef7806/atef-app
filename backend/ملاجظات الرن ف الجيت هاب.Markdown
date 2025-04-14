@@ -1,0 +1,32 @@
+# إضافة كل الملفات المعدلة
+git add .
+
+# عمل commit مع رسالة
+git commit -m "تعديل المسارات وتصحيح ملف railway.json"
+
+# رفع التعديلات إلى الفرع الرئيسي على GitHub
+git push origin main
+
+
+لو أضفت أي تعديل جديد (سواء في ملف .html أو .py) لازم تعيد الخطوات:
+
+git add .
+git commit -m "شرح التعديل"
+git push origin main
+
+تشغيل السيرفر بايثون
+python run.py
+Python app.py
+
+------------------
+
+تشغيل السيرفر عام
+
+
+نشر التعديلات:
+من مجلد ATEF1 (المجلد اللي فيه .git):
+
+git add .
+git commit -m "fix: correct app path and Docker CMD"
+git push
+fly deploy
