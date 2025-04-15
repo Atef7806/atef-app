@@ -32,7 +32,7 @@ def seeker_profile():
 
 @app.route('/employment-application')
 def employment_application():
-    return render_template('employment application.html')
+    return render_template('employment_application.html')
 
 @app.route('/who-are-you')
 def who_are_you():
@@ -88,6 +88,100 @@ def settings():
 @app.route('/log-out')
 def log_out():
     return render_template('log out.html')
+
+
+
+from flask import request, redirect, url_for
+import json  # لتخزين البيانات بشكل مبسط
+
+
+@app.route('/submit-application', methods=['POST'])
+def submit_application():
+    application_data = request.form.to_dict()
+    
+    # نحفظ الطلب في ملف JSON (حل مؤقت بسيط بدل قاعدة بيانات)
+    try:
+        with open('applications.json', 'r', encoding='utf-8') as f:
+            all_apps = json.load(f)
+    except FileNotFoundError:
+        all_apps = []
+
+    all_apps.append(application_data)
+
+    with open('applications.json', 'w', encoding='utf-8') as f:
+        json.dump(all_apps, f, ensure_ascii=False, indent=4)
+
+    return redirect(url_for('employment_interviews'))
+
+
+def employment_interviews():
+    try:
+        with open('applications.json', 'r', encoding='utf-8') as f:
+            all_apps = json.load(f)
+    except FileNotFoundError:
+        all_apps = []
+
+    return render_template('employment interviews.html', applications=all_apps)
+
+
+
+
+
+
+
+
+
+
+
+
+
+def submit_application():
+    full_name = request.form.get('fullName')
+    nationality = request.form.get('nationality')
+    birth_date = request.form.get('birthDate')
+    religion = request.form.get('religion')
+    gender = request.form.get('gender')
+    marital_status = request.form.get('maritalStatus')
+
+    # بيانات الاتصال
+    address = request.form.get('address')
+    phone = request.form.get('phone')
+    currently_employed = request.form.get('currentlyEmployed')
+
+    # طباعة للتجربة
+    print("====== طلب توظيف جديد ======")
+    print(f"الاسم: {full_name}, الجنسية: {nationality}, يعمل حالياً: {currently_employed}")
+
+    # عرض صفحة نجاح
+    return render_template('application_success.html', name=full_name)
+
+
+
+
+
+# بيانات تجريبية
+jobs_list = [
+    {
+        "title": "مطور ذكاء اصطناعي",
+        "company": "شركة المستقبل",
+        "image": "https://source.unsplash.com/random/800x600?ai",
+        "salary": "25,000 - 30,000 ر.س",
+        "location": "الرياض",
+        "tags": ["AI", "Python", "Machine Learning"],
+        "description": "تطوير أنظمة الذكاء الاصطناعي المتقدمة"
+    },
+    ...
+]
+
+
+def jobs():
+    query = request.args.get('q', '')
+    if query:
+        results = [job for job in jobs_list if query in job['title']]
+    else:
+        results = jobs_list
+    return render_template('jobs.html', jobs=results, query=query)
+
 
 
 

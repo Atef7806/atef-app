@@ -545,10 +545,13 @@ nav {
         <section class="hero-section">
             <div class="search-container">
                 <h1 style="margin-bottom: 2rem;">ابحث عن وظيفة أحلامك مع الذكاء الاصطناعي 🤖</h1>
-                <div class="search-box">
-                    <input type="text" class="search-input" placeholder="ما الوظيفة التي تبحث عنها؟">
-                    <button class="search-btn">بحث ذكي</button>
-                </div>
+                <form action="{{ url_for('jobs') }}" method="GET">
+                    <div class="search-box">
+                        <input type="text" name="q" class="search-input" placeholder="ما الوظيفة التي تبحث عنها؟">
+                        <button type="submit" class="search-btn">بحث ذكي</button>
+                    </div>
+                  </form>
+                  
                 <div class="stats">
                     <div class="stat-item">
                         <h3>+1M</h3>

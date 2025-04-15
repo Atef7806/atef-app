@@ -286,8 +286,10 @@ a{
 
     <main class="jobs-grid" id="jobsGrid"></main>
 
-<a href="employment application.html"><button class="apply-button">تقديم الآن</button>
-</a>
+    <a href="{{ url_for('employment_application') }}">
+        <button class="apply-button">تقديم الآن</button>
+    </a>
+    
  
     <script>
         const jobs = [

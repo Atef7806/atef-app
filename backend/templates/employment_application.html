@@ -252,33 +252,47 @@ table tr:nth-child(even) td {
             <p>الرجاء ملء البيانات المطلوبة بعناية لضمان معالجة طلبك.</p>
         </header>
 
-        <form id="jobApplicationForm">
-            <!-- Personal Information Section -->
+        <form method="POST" action="{{ url_for('submit_application') }}">
+            <!-- القسم الأول: البيانات الشخصية -->
             <section class="form-section">
                 <h2>البيانات الشخصية</h2>
                 <div class="form-grid">
-                    <label>الاسم الكامل: <input type="text" name="fullName" placeholder="اكتب اسمك الكامل" required></label>
-                    <label>الجنسية: <input type="text" name="nationality" placeholder="اكتب جنسيتك" required></label>
-                    <label>تاريخ الميلاد: <input type="date" name="birthDate" required></label>
-                    <label>الدين: <input type="text" name="religion" placeholder="اختياري"></label>
-                    <label>الجنس: 
+                    <label>الاسم الكامل:
+                        <input type="text" name="fullName" placeholder="اكتب اسمك الكامل" required>
+                    </label>
+                    <label>الجنسية:
+                        <input type="text" name="nationality" placeholder="اكتب جنسيتك" required>
+                    </label>
+                    <label>تاريخ الميلاد:
+                        <input type="date" name="birthDate" required>
+                    </label>
+                    <label>الدين:
+                        <input type="text" name="religion" placeholder="اختياري">
+                    </label>
+                    <label>الجنس:
                         <select name="gender" required>
                             <option value="">اختر</option>
                             <option value="male">ذكر</option>
                             <option value="female">أنثى</option>
                         </select>
                     </label>
-                    <label>الحالة الاجتماعية: <input type="text" name="maritalStatus" placeholder="مثل: أعزب/متزوج"></label>
+                    <label>الحالة الاجتماعية:
+                        <input type="text" name="maritalStatus" placeholder="مثل: أعزب/متزوج">
+                    </label>
                 </div>
             </section>
-
-            <!-- Contact Information Section -->
+        
+            <!-- القسم الثاني: بيانات الاتصال -->
             <section class="form-section">
                 <h2>بيانات الاتصال</h2>
                 <div class="form-grid">
-                    <label>العنوان: <input type="text" name="address" placeholder="اكتب عنوانك"></label>
-                    <label>رقم الهاتف: <input type="tel" name="phone" placeholder="رقم هاتفك" required></label>
-                    <label>هل تعمل حاليًا؟ 
+                    <label>العنوان:
+                        <input type="text" name="address" placeholder="اكتب عنوانك">
+                    </label>
+                    <label>رقم الهاتف:
+                        <input type="tel" name="phone" placeholder="رقم هاتفك" required>
+                    </label>
+                    <label>هل تعمل حاليًا؟
                         <select name="currentlyEmployed">
                             <option value="">اختر</option>
                             <option value="yes">نعم</option>
@@ -287,58 +301,17 @@ table tr:nth-child(even) td {
                     </label>
                 </div>
             </section>
-
-            <!-- Educational Information Section -->
-            <section class="form-section">
-                <h2>البيانات التعليمية</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>الشهادة</th>
-                            <th>التقدير</th>
-                            <th>التخصص</th>
-                            <th>الجامعة/المدرسة</th>
-                            <th>الدولة</th>
-                            <th>تاريخ التخرج</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="text" name="certificate" placeholder="مثل: بكالوريوس"></td>
-                            <td><input type="text" name="grade" placeholder="مثل: جيد جدًا"></td>
-                            <td><input type="text" name="major" placeholder="مثل: هندسة"></td>
-                            <td><input type="text" name="university" placeholder="اسم الجامعة"></td>
-                            <td><input type="text" name="country" placeholder="الدولة"></td>
-                            <td><input type="date" name="graduationDate"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-            <br>
-           <br>
-           <br>
-           <br>
-           <br>
-           <br>
-           <br>
-            <div class="cv-upload-area" id="dropZone">
-                <i class="fas fa-cloud-upload-alt fa-3x"></i>
-                <h2>اسحب وأفلت السيرة الذاتية هنا</h2>
-                <p>أو <span class="accent-text">انقر للاختيار</span></p>
-                <input type="file" id="cvInput" hidden accept=".pdf,.doc,.docx">
-                <div class="upload-preview" id="filePreview"></div>
-            </div>
-
-            <div class="ai-analysis" id="aiAnalysis">
-                <h3>تحليل الذكاء الاصطناعي:</h3>
-                <div class="match-percent">التطابق: <span>85%</span></div>
-                <div class="skills-container" id="skills"></div>
-            </div>
-
-            <button type="submit" class="submit-btn">إرسال الطلب 🚀</button>
+        
+            <form method="POST" action="/submit-application">
+                <!-- كل عناصر الإدخال اللي عندك -->
+                <button type="submit">إرسال الطلب</button>
+            </form>
+            
         </form>
-    </div>
-</div>
+        
+            
+
+          
 
            
 <script>

@@ -30,3 +30,5 @@ git add .
 git commit -m "fix: correct app path and Docker CMD"
 git push
 fly deploy
+
+fly deploy
