@@ -311,6 +311,8 @@
 
         <div class="header">
             <h1>إنشاء حساب جديد</h1>
+            <a href="{{ url_for('signup') }}">إنشاء حساب جديد</a>
+
             <p>انضم إلى نظام التوظيف الذكي واستفد من تقنيات الذكاء الاصطناعي المتقدمة</p>
         </div>
 
@@ -364,8 +366,11 @@
         </form>
 
         <div class="login-link">
-            لديك حساب بالفعل؟ <a href="#">سجل دخولك الآن</a>
+            لديك حساب بالفعل؟ <a href="/login">سجل دخولك الآن</a>
         </div>
+        
+        
+        
     </div>
 
     <script>
@@ -428,15 +433,19 @@
         }
 
         // Form Submission
-        function handleSubmit(e) {
-            e.preventDefault();
-            showLoading();
-            // Simulate AI processing
-            setTimeout(() => {
-                hideLoading();
-                showNotification('تم إنشاء الحساب بنجاح! جاري تحويلك...', 'success');
-            }, 2000);
-        }
+        // Form Submission
+function handleSubmit(e) {
+    e.preventDefault();
+    showLoading();
+    // Simulate AI processing
+    setTimeout(() => {
+        hideLoading();
+        showNotification('تم إنشاء الحساب بنجاح! جاري تحويلك...', 'success');
+        // Redirect to profile.html after a successful account creation
+        window.location.href = 'profile.html';
+    }, 2000);
+}
+
 
         // UI Helpers
         function showLoading() {

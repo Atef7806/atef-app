@@ -76,12 +76,15 @@ def jobs():
     results = [job for job in jobs_list if query in job['title']] if query else jobs_list
     return render_template('jobs.html', jobs=results, query=query)
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
+@app.route('/logout')
+def logout():
+    return render_template('logout.html')
 
-@app.route('/signup')
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    if request.method == 'POST':
+        # منطق التسجيل هنا (تخزين بيانات المستخدم في قاعدة البيانات)
+        return redirect(url_for('profile'))  # إعادة التوجيه إلى صفحة الملف الشخصي بعد التسجيل
     return render_template('signup.html')
 
 @app.route('/companies')
@@ -90,7 +93,7 @@ def companies():
 
 @app.route('/seeker-profile')
 def seeker_profile():
-    return render_template('الملف الشخصي للباحث عن عمل.html')
+    return render_template('إعداد الملف الشخصي.html')
 
 @app.route('/employment-application')
 def employment_application():
@@ -163,11 +166,45 @@ def customer_support():
 def settings():
     return render_template('settings.html')
 
-@app.route('/log-out')
-def log_out():
-    return render_template('log out.html')
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+
+@app.route('/forgot-password')
+def forgot_password():
+    return render_template('forgot_password.html')
+
+
+@app.route("/profile")
+def profile():
+    return render_template("profile.html")  # تأكد من وجود الملف profile.html في مجلد templates
 
 # ====== استقبال طلب التوظيف ======
+
+
+@app.route('/delete-application/<int:application_id>')
+def delete_application(application_id):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # نحذف السيرة الذاتية من مجلد uploads (اختياري)
+        row = cursor.execute("SELECT cv_path FROM applications WHERE id = ?", (application_id,)).fetchone()
+        if row and row['cv_path'] and os.path.exists(row['cv_path']):
+            os.remove(row['cv_path'])
+
+        # نحذف السجل من قاعدة البيانات
+        cursor.execute("DELETE FROM applications WHERE id = ?", (application_id,))
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('employment_interviews_page'))
+    except Exception as e:
+        print(f"خطأ أثناء حذف الطلب: {e}")
+        return "حدث خطأ أثناء محاولة الحذف"
+
+
 def create_table():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -279,22 +316,6 @@ def submit_application():
     except Exception as e:
         print(f"خطأ أثناء الحفظ: {e}")
         return "حدث خطأ أثناء إرسال الطلب"
-
-# ====== دالة حذف طلب التوظيف ======
-@app.route('/delete_application/<int:application_id>', methods=['GET'])
-def delete_application(application_id):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    # حذف السجل بناءً على ID
-    cursor.execute("DELETE FROM applications WHERE id = ?", (application_id,))
-    conn.commit()
-
-    # إغلاق الاتصال
-    conn.close()
-
-    # إعادة التوجيه إلى صفحة المقابلات بعد الحذف
-    return redirect(url_for('employment_interviews_page'))
 
 # ====== تشغيل التطبيق ======
 if __name__ == '__main__':
