@@ -94,34 +94,103 @@
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
+    .search-section {
+        margin-bottom: 30px;
+    }
+
+    .search-container {
+        display: flex;
+        align-items: center;
+        background: #fff;
+        padding: 10px;
         border-radius: 10px;
-        overflow: hidden;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     }
 
-    table th, table td {
-        padding: 12px;
-        text-align: center;
-        font-size: 14px;
-        color: #555;
-        border-bottom: 1px solid #ddd;
+    .search-icon {
+        width: 24px;
+        height: 24px;
+        background: url('https://img.icons8.com/ios/452/search.png') no-repeat center;
+        background-size: contain;
+        margin-right: 10px;
     }
 
-    table th {
-        background: linear-gradient(135deg, #4A90E2, #50E3C2);
+    .search-input {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        outline: none;
+        font-size: 16px;
+    }
+
+    .filters {
+        margin: 20px 0;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .filter-btn {
+        padding: 10px 20px;
+        border: 2px solid #4A90E2;
+        border-radius: 30px;
+        background: transparent;
+        color: #4A90E2;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .filter-btn.active {
+        background: #4A90E2;
         color: #fff;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
     }
 
-    table td {
-        background-color: #f9f9f9;
+    .jobs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
     }
 
-    table tr:nth-child(even) td {
-        background-color: #f1f1f1;
+    .job-card {
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.4s ease;
+        cursor: pointer;
+    }
+
+    .salary-badge {
+        background: #4A90E2;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 14px;
+        margin-bottom: 10px;
+        display: inline-block;
+    }
+
+    .job-image {
+        width: 100%;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+    .job-tags {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .job-tag {
+        background: #50E3C2;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 14px;
     }
 
     @keyframes fadeIn {
@@ -166,45 +235,30 @@
 <body>
     <div class="container">
         <header>
-            <h1>نموذج طلب توظيف</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>الاسم الكامل</th>
-                        <th>الجنسية</th>
-                        <th>تاريخ الميلاد</th>
-                        <th>الدين</th>
-                        <th>الجنس</th>
-                        <th>الحالة الاجتماعية</th>
-                        <th>العنوان</th>
-                        <th>الهاتف</th>
-                        <th>حالة العمل حالياً</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for application in applications %}
-                        <tr>
-                            <td>{{ application[1] }}</td>
-                            <td>{{ application[2] }}</td>
-                            <td>{{ application[3] }}</td>
-                            <td>{{ application[4] }}</td>
-                            <td>{{ application[5] }}</td>
-                            <td>{{ application[6] }}</td>
-                            <td>{{ application[7] }}</td>
-                            <td>{{ application[8] }}</td>
-                            <td>{{ application[9] }}</td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="9">لا توجد طلبات توظيف حالياً</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <h1>نظام التوظيف الإلكتروني</h1>
         </header>
 
-        <form method="POST" action="{{ url_for('submit_application') }}">
+        <section class="search-section">
+            <div class="search-container">
+                <div class="search-icon"></div>
+                <input type="text" class="search-input" id="searchInput" placeholder="ابحث عن وظيفة أحلامك...">
+            </div>
+        </section>
+
+        <div class="filters">
+            <button class="filter-btn active" data-category="الكل">الكل</button>
+            <button class="filter-btn" data-category="التقنية">التقنية</button>
+            <button class="filter-btn" data-category="التصميم">التصميم</button>
+            <button class="filter-btn" data-category="المالية">المالية</button>
+        </div>
+
+        <main class="jobs-grid" id="jobsGrid"></main>
+
+        <form method="POST" action="{{ url_for('submit_application') }}" enctype="multipart/form-data">
             <h2>البيانات الشخصية</h2>
+
+            <label for="job">الوظيفة المختارة</label>
+            <input type="text" id="selectedJob" name="selectedJob" readonly required>
 
             <label for="name">الاسم الكامل</label>
             <input type="text" id="name" name="name" required>
@@ -236,8 +290,129 @@
             <label for="currently_employed">هل تعمل حالياً؟</label>
             <input type="text" id="currently_employed" name="currently_employed">
 
+            <label for="cv">رفع السيرة الذاتية</label>
+            <input type="file" id="cv" name="cvInput" required>
+            <p id="file-name" style="color: #333; margin-top: 5px;"></p>
+            <p id="upload-status" style="color: green; margin-top: 10px; display: none;">جاري رفع السيرة الذاتية...</p>
+
             <button type="submit">إرسال الطلب</button>
         </form>
     </div>
+
+    <script>
+        const jobs = [
+            {
+                title: "مطور ذكاء اصطناعي",
+                company: "شركة المستقبل",
+                image: "https://source.unsplash.com/random/800x600?ai",
+                salary: "25,000 - 30,000 ر.س",
+                location: "الرياض",
+                tags: ["AI", "Python", "Machine Learning"],
+                category: "التقنية",
+                description: "تطوير أنظمة الذكاء الاصطناعي المتقدمة"
+            },
+            {
+                title: "مهندس برمجيات",
+                company: "Techno Arabia",
+                image: "https://source.unsplash.com/random/800x600?software",
+                salary: "22,000 - 27,000 ر.س",
+                location: "الخبر",
+                tags: ["JavaScript", "Node.js", "Backend"],
+                category: "التقنية",
+                description: "بناء تطبيقات ويب قوية وحديثة"
+            },
+            {
+                title: "مطور تطبيقات جوال",
+                company: "Digital Solutions",
+                image: "https://source.unsplash.com/random/800x600?mobile",
+                salary: "20,000 - 25,000 ر.س",
+                location: "الرياض",
+                tags: ["Flutter", "iOS", "Android"],
+                category: "التقنية",
+                description: "برمجة تطبيقات جوال باستخدام أحدث التقنيات"
+            },
+            {
+                title: "مصمم جرافيك",
+                company: "وكالة إبداعية",
+                image: "https://source.unsplash.com/random/800x600?design",
+                salary: "15,000 - 20,000 ر.س",
+                location: "جدة",
+                tags: ["Photoshop", "Illustrator", "UI/UX"],
+                category: "التصميم",
+                description: "تصميم هويات بصرية مبتكرة"
+            },
+            {
+                title: "محلل مالي",
+                company: "شركة استثمار",
+                image: "https://source.unsplash.com/random/800x600?finance",
+                salary: "18,000 - 23,000 ر.س",
+                location: "الرياض",
+                tags: ["Excel", "تحليل مالي", "تخطيط"],
+                category: "المالية",
+                description: "تحليل البيانات المالية وتقديم التقارير"
+            }
+        ];
+
+        let currentCategory = "الكل";
+        let currentSearch = "";
+
+        function generateJobs() {
+            const grid = document.getElementById('jobsGrid');
+
+            let filteredJobs = jobs.filter(job => {
+                const matchesCategory = currentCategory === "الكل" || job.category === currentCategory;
+                const matchesSearch =
+                    job.title.toLowerCase().includes(currentSearch) ||
+                    job.description.toLowerCase().includes(currentSearch) ||
+                    job.company.toLowerCase().includes(currentSearch) ||
+                    job.tags.some(tag => tag.toLowerCase().includes(currentSearch));
+                return matchesCategory && matchesSearch;
+            });
+
+            grid.innerHTML = filteredJobs.map(job => `
+                <div class="job-card" onclick="selectJob('${job.title}')">
+                    <span class="salary-badge">${job.salary}</span>
+                    <img src="${job.image}" class="job-image" alt="${job.title}">
+                    <h3>${job.title}</h3>
+                    <p>${job.company}</p>
+                    <p>${job.location}</p>
+                    <div class="job-tags">
+                        ${job.tags.map(tag => `<span class="job-tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            // إضافة التأثيرات بعد تحميل البيانات
+            setTimeout(() => {
+                document.querySelectorAll('.job-card').forEach((card, index) => {
+                    card.style.opacity = 1;
+                    card.style.transform = 'translateY(0)';
+                });
+            }, 50);
+        }
+
+        function selectJob(title) {
+            document.getElementById('selectedJob').value = title;
+        }
+
+        // الفلاتر
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.getAttribute('data-category');
+                generateJobs();
+            });
+        });
+
+        // البحث
+        document.getElementById('searchInput').addEventListener('input', event => {
+            currentSearch = event.target.value.toLowerCase();
+            generateJobs();
+        });
+
+        // أول تحميل
+        generateJobs();
+    </script>
 </body>
 </html>

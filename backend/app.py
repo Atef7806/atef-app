@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 import threading
 import time
+import os
+from werkzeug.utils import secure_filename
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -9,16 +12,12 @@ app = Flask(__name__)
 db_lock = threading.Lock()
 
 # ====== قاعدة البيانات ======
-# ====== تحديث إعدادات الاتصال بقاعدة البيانات ======
 def get_db_connection():
-    with db_lock:  # قفل الاتصال لضمان أن عملية واحدة فقط تستطيع الوصول إلى قاعدة البيانات في الوقت ذاته
-        conn = sqlite3.connect('database.db', timeout=60)  # زيادة المهلة لتفادي مشكلة القفل
+    with db_lock:
+        conn = sqlite3.connect('database.db', timeout=60)
         conn.row_factory = sqlite3.Row
-        
-        # تفعيل وضع WAL للـ journal_mode لزيادة التزامن
-        conn.execute("PRAGMA journal_mode=WAL;")  # وضع الـ journal_mode إلى WAL
-        conn.execute("PRAGMA synchronous=NORMAL;")  # تعديل إعدادات التزامن (اختياري)
-
+        conn.execute("PRAGMA journal_mode=WAL;")
+        conn.execute("PRAGMA synchronous=NORMAL;")
         return conn
 
 # ====== تحديث الجدول بإضافة الأعمدة المفقودة ======
@@ -29,17 +28,23 @@ def update_table():
             conn = get_db_connection()
             cursor = conn.cursor()
 
-            # إضافة الأعمدة المفقودة (تأكد من أن الأعمدة جميعها موجودة)
-            cursor.execute("ALTER TABLE applications ADD COLUMN interview_status TEXT;")
-            cursor.execute("ALTER TABLE applications ADD COLUMN interview_date TEXT;")
-            cursor.execute("ALTER TABLE applications ADD COLUMN interview_time TEXT;")
-            conn.commit()
-            print("تم إضافة الأعمدة بنجاح.")
+            # تحقق من وجود العمود قبل إضافته
+            cursor.execute("PRAGMA table_info(applications);")
+            columns = [column[1] for column in cursor.fetchall()]
+
+            if 'cv_path' not in columns:
+                cursor.execute("ALTER TABLE applications ADD COLUMN cv_path TEXT;")
+                conn.commit()
+
+            if 'created_at' not in columns:
+                cursor.execute("ALTER TABLE applications ADD COLUMN created_at DATETIME;")
+                conn.commit()
+
             conn.close()
             return
         except sqlite3.OperationalError as e:
             print(f"خطأ أثناء التعديل: {e}")
-            time.sleep(2)  # الانتظار لثواني قبل المحاولة مرة أخرى
+            time.sleep(2)
     print("تعذر إجراء التعديل بعد عدة محاولات.")
 
 # استدعاء دالة تحديث الجدول لتأكد من إضافة الأعمدة الجديدة
@@ -116,7 +121,19 @@ def employment_interviews_page():
     conn = get_db_connection()
     applications = conn.execute("SELECT * FROM applications").fetchall()
     conn.close()
-    return render_template('employment_interviews.html', applications=applications)
+
+    # تحويل السجلات إلى قائمة من القواميس
+    applications_list = []
+    for application in applications:
+        application_dict = dict(application)
+        try:
+            application_dict['created_at'] = datetime.strptime(application_dict['created_at'], "%Y-%m-%d %H:%M:%S.%f")
+        except ValueError:
+            application_dict['created_at'] = datetime.strptime(application_dict['created_at'], "%Y-%m-%d %H:%M:%S")
+        applications_list.append(application_dict)
+
+    return render_template('employment_interviews.html', applications=applications_list)
+
 
 @app.route('/smart-search')
 def smart_search():
@@ -168,7 +185,9 @@ def create_table():
         currently_employed TEXT,
         interview_status TEXT,
         interview_date TEXT,
-        interview_time TEXT
+        interview_time TEXT,
+        cv_path TEXT,
+        created_at DATETIME
     )
     ''')
     conn.commit()
@@ -177,6 +196,20 @@ def create_table():
 # استدعاء دالة إنشاء الجدول عند بداية تشغيل التطبيق
 create_table()
 
+# ====== تحديد إعدادات رفع الملفات ======
+UPLOAD_FOLDER = 'uploads/cvs'
+ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+# دالة للتحقق من نوع الملف
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# ====== دالة استقبال طلب التوظيف ======
 @app.route('/submit-application', methods=['POST'])
 def submit_application():
     try:
@@ -197,6 +230,17 @@ def submit_application():
         interview_date = data.get('interviewDate')
         interview_time = data.get('interviewTime')
 
+        # التعامل مع ملف السيرة الذاتية
+        file = request.files.get('cvInput')
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+            print(f"تم حفظ السيرة الذاتية في {file_path}")
+        else:
+            return "لا يوجد ملف مرفق أو نوع الملف غير مدعوم"
+
         conn = get_db_connection()
         cursor = conn.cursor()
 
@@ -208,8 +252,8 @@ def submit_application():
 
         cursor.execute(''' 
             INSERT INTO applications 
-            (name, nationality, birth_date, religion, gender, marital_status, address, phone, currently_employed, interview_status, interview_date, interview_time) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (name, nationality, birth_date, religion, gender, marital_status, address, phone, currently_employed, interview_status, interview_date, interview_time, cv_path, created_at) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
             name,
             nationality,
@@ -222,19 +266,21 @@ def submit_application():
             currently_employed,
             interview_status,
             interview_date,
-            interview_time
+            interview_time,
+            file_path,  # مسار السيرة الذاتية
+            datetime.utcnow()  # إضافة التاريخ والوقت الحاليين
         ))
 
         conn.commit()
         conn.close()
 
-        return render_template('application_submitted.html')  # بدل redirect
+        return render_template('application_submitted.html')
 
     except Exception as e:
         print(f"خطأ أثناء الحفظ: {e}")
         return "حدث خطأ أثناء إرسال الطلب"
 
-# دالة حذف طلب التوظيف
+# ====== دالة حذف طلب التوظيف ======
 @app.route('/delete_application/<int:application_id>', methods=['GET'])
 def delete_application(application_id):
     conn = get_db_connection()

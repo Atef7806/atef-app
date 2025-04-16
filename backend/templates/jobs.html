@@ -1,448 +1,412 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وظائف المستقبل الذكية</title>
-    <style>
-        :root {
-            --primary: #2A2A72;
-            --secondary: #00F3FF;
-            --accent: #FF4D8A;
-            --bg: linear-gradient(45deg, #1a1a4a, #2A2A72);
-            --glass: rgba(255,255,255,0.05);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>وظائف المستقبل الذكية</title>
+  <style>
+    :root {
+      --primary: #2A2A72;
+      --secondary: #00F3FF;
+      --accent: #FF4D8A;
+      --bg: linear-gradient(45deg, #1a1a4a, #2A2A72);
+      --glass: rgba(255,255,255,0.05);
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
 
-        body {
-            background: var(--bg);
-            color: white;
-            min-height: 100vh;
-        }
+    body {
+      background: var(--bg);
+      color: white;
+      min-height: 100vh;
+    }
 
-        /* الهيدر */
-        .header {
-            padding: 1.5rem 5%;
-            background: rgba(42,42,114,0.95);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+    .header {
+      padding: 1.5rem 5%;
+      background: rgba(42,42,114,0.95);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
 
-        .logo {
-            font-size: 2rem;
-            color: var(--secondary);
-            text-decoration: none;
-            animation: logoGlow 2s infinite alternate;
-        }
+    .logo {
+      font-size: 2rem;
+      color: var(--secondary);
+      text-decoration: none;
+      animation: logoGlow 2s infinite alternate;
+    }
 
-        /* قسم البحث */
-        .search-section {
-            padding: 4rem 5%;
-            text-align: center;
-        }
+    .search-section {
+      padding: 4rem 5%;
+      text-align: center;
+    }
 
-        .search-container {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-        }
+    .search-container {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+    }
 
-        .search-input {
-            width: 100%;
-            padding: 1.5rem 2rem;
-            border: none;
-            border-radius: 50px;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            color: white;
-            font-size: 1.1rem;
-            transition: 0.3s;
-        }
+    .search-input {
+      width: 100%;
+      padding: 1.5rem 2rem;
+      border: none;
+      border-radius: 50px;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      color: white;
+      font-size: 1.1rem;
+      transition: 0.3s;
+    }
 
-        .search-input:focus {
-            outline: none;
-            box-shadow: 0 0 30px rgba(0,243,255,0.3);
-        }
+    .search-input:focus {
+      outline: none;
+      box-shadow: 0 0 30px rgba(0,243,255,0.3);
+    }
 
-        .search-icon {
-            position: absolute;
-            left: 25px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 30px;
-            height: 30px;
-            background: var(--accent);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
+    .search-icon {
+      position: absolute;
+      left: 25px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 30px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
 
-        /* فلاتر */
-        .filters {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            padding: 2rem;
-            flex-wrap: wrap;
-        }
+    .filters {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      padding: 2rem;
+      flex-wrap: wrap;
+    }
 
-        .filter-btn {
-            padding: 0.8rem 2rem;
-            border: none;
-            border-radius: 30px;
-            background: var(--glass);
-            color: white;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: 0.3s;
-        }
+    .filter-btn {
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 30px;
+      background: var(--glass);
+      color: white;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: 0.3s;
+    }
 
-        .filter-btn.active {
-            background: var(--accent);
-            transform: scale(1.1);
-        }
+    .filter-btn.active {
+      background: var(--accent);
+      transform: scale(1.1);
+    }
 
-        .filter-btn::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background: var(--secondary);
-            transition: 0.3s;
-        }
+    .filter-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: var(--secondary);
+      transition: 0.3s;
+    }
 
-        .filter-btn:hover::after {
-            width: 100%;
-        }
+    .filter-btn:hover::after {
+      width: 100%;
+    }
 
-        /* شبكة الوظائف */
-        .jobs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 3rem 5%;
-        }
+    .jobs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      padding: 3rem 5%;
+    }
 
-        .job-card {
-            background: var(--glass);
-            border-radius: 20px;
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
-            transition: 0.4s;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-        }
+    .job-card {
+      background: var(--glass);
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: 0.4s;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      transform: translateY(50px);
+    }
 
-        .job-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
+    .job-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
 
-        .job-image {
-            width: 100%;
-            height: 200px;
-            border-radius: 15px;
-            object-fit: cover;
-            margin-bottom: 1rem;
-            transition: 0.3s;
-        }
+    .job-image {
+      width: 100%;
+      height: 200px;
+      border-radius: 15px;
+      object-fit: cover;
+      margin-bottom: 1rem;
+      transition: 0.3s;
+    }
 
-        .job-card:hover .job-image {
-            transform: scale(1.05);
-        }
+    .job-card:hover .job-image {
+      transform: scale(1.05);
+    }
 
-        .job-tags {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
+    .job-tags {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
 
-        .job-tag {
-            background: rgba(255,255,255,0.1);
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            transition: 0.3s;
-        }
+    .job-tag {
+      background: rgba(255,255,255,0.1);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      transition: 0.3s;
+    }
 
-        .job-card:hover .job-tag {
-            background: var(--accent);
-        }
+    .job-card:hover .job-tag {
+      background: var(--accent);
+    }
 
-        .salary-badge {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: var(--secondary);
-            color: var(--primary);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: bold;
-            animation: float 3s infinite ease-in-out;
-        }
+    .salary-badge {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: var(--secondary);
+      color: var(--primary);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: bold;
+      animation: float 3s infinite ease-in-out;
+    }
 
-        /* الرسوم المتحركة */
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255,77,138,0.4); }
-            100% { box-shadow: 0 0 0 20px rgba(255,77,138,0); }
-        }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,77,138,0.4); }
+      100% { box-shadow: 0 0 0 20px rgba(255,77,138,0); }
+    }
 
-        @keyframes logoGlow {
-            0% { text-shadow: 0 0 10px var(--secondary); }
-            100% { text-shadow: 0 0 20px var(--accent); }
-        }
+    @keyframes logoGlow {
+      0% { text-shadow: 0 0 10px var(--secondary); }
+      100% { text-shadow: 0 0 20px var(--accent); }
+    }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
 
-        @media (max-width: 768px) {
-            .jobs-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+    @media (max-width: 768px) {
+      .jobs-grid {
+        grid-template-columns: 1fr;
+      }
+    }
 
+    .apply-button {
+      display: block;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      background: linear-gradient(45deg, var(--secondary), var(--accent));
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      margin: 2rem auto;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
 
+    .apply-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    }
 
+    .apply-button::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: rgba(255,255,255,0.1);
+      transform: rotate(45deg);
+      transition: 0.5s;
+    }
 
-        .apply-button {
-            display: inline-block;
-            padding: 1rem 2rem;
-            font-size: 1.2rem;
-            background: linear-gradient(45deg, var(--secondary-color), var(--accent-color));
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            margin: 2rem auto;
-            display: block;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
+    .apply-button:hover::after {
+      left: 120%;
+    }
 
-        .apply-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-        }
-
-        .apply-button::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: rgba(255,255,255,0.1);
-            transform: rotate(45deg);
-            transition: 0.5s;
-        }
-
-        .apply-button:hover::after {
-            left: 120%;
-        }
-a{
-    text-decoration: none;
-}
-       
-    </style>
+    a {
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
-    <header class="header">
-        <a href="#" class="logo">AIJobs</a>
+  <header class="header">
+    <a href="#" class="logo">AIJobs</a>
+  </header>
 
-    </header>
-
-    <section class="search-section">
-        <div class="search-container">
-            <div class="search-icon"></div>
-            <input type="text" class="search-input" placeholder="ابحث عن وظيفة أحلامك...">
-        </div>
-    </section>
-
-    <div class="filters">
-        <button class="filter-btn active">الكل</button>
-        <button class="filter-btn">التقنية</button>
-        <button class="filter-btn">التصميم</button>
-        <button class="filter-btn">المالية</button>
+  <section class="search-section">
+    <div class="search-container">
+      <div class="search-icon"></div>
+      <input type="text" class="search-input" id="searchInput" placeholder="ابحث عن وظيفة أحلامك...">
     </div>
-
-    <main class="jobs-grid" id="jobsGrid"></main>
-
-    <a href="{{ url_for('employment_application') }}">
-        <button class="apply-button">تقديم الآن</button>
-    </a>
-    
- 
-    <script>
-        const jobs = [
-            {
-                title: "مطور ذكاء اصطناعي",
-                company: "شركة المستقبل",
-                image: "https://source.unsplash.com/random/800x600?ai",
-                salary: "25,000 - 30,000 ر.س",
-                location: "الرياض",
-                tags: ["AI", "Python", "Machine Learning"],
-                description: "تطوير أنظمة الذكاء الاصطناعي المتقدمة"
-            },
-            // 9 وظائف أخرى بنفس الهيكل
-            {
-                title: "مصمم جرافيك",
-                company: "وكالة إبداعية",
-                image: "https://source.unsplash.com/random/800x600?design",
-                salary: "15,000 - 20,000 ر.س",
-                location: "جدة",
-                tags: ["Photoshop", "Illustrator", "UI/UX"],
-                description: "تصميم هويات بصرية مبتكرة"
-            },
-            {
-                title: "مهندس بيانات",
-                company: "شركة التقنية",
-                image: "https://source.unsplash.com/random/800x600?data",
-                salary: "22,000 - 28,000 ر.س",
-                location: "الدمام",
-                tags: ["SQL", "Big Data", "Analytics"],
-                description: "إدارة وتحليل البيانات الضخمة"
-            },
-            {
-                title: "مطور ويب",
-                company: "شركة التكنولوجيا",
-                image: "https://source.unsplash.com/random/800x600?web",
-                salary: "18,000 - 25,000 ر.س",
-                location: "الرياض",
-                tags: ["HTML", "CSS", "JavaScript"],
-                description: "تطوير تطبيقات ويب حديثة"
-            },
-            {
-                title: "مسوق رقمي",
-                company: "وكالة تسويق",
-                image: "https://source.unsplash.com/random/800x600?marketing",
-                salary: "12,000 - 18,000 ر.س",
-                location: "جدة",
-                tags: ["SEO", "Social Media", "Ads"],
-                description: "إدارة الحملات التسويقية الرقمية"
-            },
-            {
-                title: "مهندس أمن سيبراني",
-                company: "شركة الأمن",
-                image: "https://source.unsplash.com/random/800x600?security",
-                salary: "30,000 - 35,000 ر.س",
-                location: "الرياض",
-                tags: ["Security", "Networks", "Encryption"],
-                description: "حماية الأنظمة والشبكات"
-            },
-            {
-                title: "مدير مشاريع",
-                company: "شركة التقنية",
-                image: "https://source.unsplash.com/random/800x600?management",
-                salary: "20,000 - 28,000 ر.س",
-                location: "الدمام",
-                tags: ["Agile", "Scrum", "Planning"],
-                description: "إدارة مشاريع التكنولوجيا"
-            },
-            {
-                title: "مطور تطبيقات جوال",
-                company: "استوديو التطبيقات",
-                image: "https://source.unsplash.com/random/800x600?mobile",
-                salary: "23,000 - 30,000 ر.س",
-                location: "الرياض",
-                tags: ["Flutter", "React Native", "iOS"],
-                description: "بناء تطبيقات الجوال الحديثة"
-            },
-            {
-                title: "محلل أعمال",
-                company: "شركة الاستشارات",
-                image: "https://source.unsplash.com/random/800x600?business",
-                salary: "17,000 - 22,000 ر.س",
-                location: "جدة",
-                tags: ["Analysis", "Reports", "Strategy"],
-                description: "تحليل بيانات الأعمال والمؤشرات"
-            },
-            {
-                title: "مصمم UI/UX",
-                company: "شركة التصميم",
-                image: "https://source.unsplash.com/random/800x600?ui",
-                salary: "19,000 - 25,000 ر.س",
-                location: "الرياض",
-                tags: ["Figma", "Prototyping", "User Research"],
-                description: "تصميم تجارب المستخدم المثالية"
-            }
-        ];
-
-        // توليد البطاقات
-        function generateJobs() {
-            const grid = document.getElementById('jobsGrid');
-            grid.innerHTML = jobs.map(job => `
-                <div class="job-card">
-                    <span class="salary-badge">${job.salary}</span>
-                    <img src="${job.image}" class="job-image" alt="${job.title}">
-                    <h3>${job.title}</h3>
-                    <p>${job.company} • ${job.location}</p>
-                    <p>${job.description}</p>
-                    <div class="job-tags">
-                        ${job.tags.map(tag => `<span class="job-tag">${tag}</span>`).join('')}
-                    </div>
-                </div>
-            `).join('');
+  </section>
+  
+  <div class="filters">
+    <button class="filter-btn active" data-category="الكل">الكل</button>
+    <button class="filter-btn" data-category="التقنية">التقنية</button>
+    <button class="filter-btn" data-category="التصميم">التصميم</button>
+    <button class="filter-btn" data-category="المالية">المالية</button>
+  </div>
+  
+  <main class="jobs-grid" id="jobsGrid"></main>
+  
+  <a href="{{ url_for('employment_application') }}">
+    <button class="apply-button">تقديم الآن</button>
+  </a>
+  
+  <script>
+    const jobs = [
+      {
+        title: "مطور ذكاء اصطناعي",
+        company: "شركة المستقبل",
+        image: "https://source.unsplash.com/random/800x600?ai",
+        salary: "25,000 - 30,000 ر.س",
+        location: "الرياض",
+        tags: ["AI", "Python", "Machine Learning"],
+        category: "التقنية",
+        description: "تطوير أنظمة الذكاء الاصطناعي المتقدمة"
+      },
+      {
+        title: "مهندس برمجيات",
+        company: "Techno Arabia",
+        image: "https://source.unsplash.com/random/800x600?software",
+        salary: "22,000 - 27,000 ر.س",
+        location: "الخبر",
+        tags: ["JavaScript", "Node.js", "Backend"],
+        category: "التقنية",
+        description: "بناء تطبيقات ويب قوية وحديثة"
+      },
+      {
+        title: "مطور تطبيقات جوال",
+        company: "Digital Solutions",
+        image: "https://source.unsplash.com/random/800x600?mobile",
+        salary: "20,000 - 25,000 ر.س",
+        location: "الرياض",
+        tags: ["Flutter", "iOS", "Android"],
+        category: "التقنية",
+        description: "برمجة تطبيقات جوال باستخدام أحدث التقنيات"
+      },
+      {
+        title: "مصمم جرافيك",
+        company: "وكالة إبداعية",
+        image: "https://source.unsplash.com/random/800x600?design",
+        salary: "15,000 - 20,000 ر.س",
+        location: "جدة",
+        tags: ["Photoshop", "Illustrator", "UI/UX"],
+        category: "التصميم",
+        description: "تصميم هويات بصرية مبتكرة"
+      },
+      {
+        title: "محلل مالي",
+        company: "شركة استثمار",
+        image: "https://source.unsplash.com/random/800x600?finance",
+        salary: "18,000 - 23,000 ر.س",
+        location: "الرياض",
+        tags: ["Excel", "تحليل مالي", "تخطيط"],
+        category: "المالية",
+        description: "تحليل البيانات المالية وتقديم التقارير"
+      }
+    ];
+  
+    let currentCategory = "الكل";
+    let currentSearch = "";
+  
+    function generateJobs() {
+      const grid = document.getElementById('jobsGrid');
+  
+      let filteredJobs = jobs.filter(job => {
+        const matchesCategory = currentCategory === "الكل" || job.category === currentCategory;
+        const matchesSearch =
+          job.title.toLowerCase().includes(currentSearch) ||
+          job.description.toLowerCase().includes(currentSearch) ||
+          job.company.toLowerCase().includes(currentSearch) ||
+          job.tags.some(tag => tag.toLowerCase().includes(currentSearch));
+        return matchesCategory && matchesSearch;
+      });
+  
+      grid.innerHTML = filteredJobs.map(job => `
+        <div class="job-card" data-job-title="${job.title}">
+          <span class="salary-badge">${job.salary}</span>
+          <img src="${job.image}" class="job-image" alt="${job.title}">
+          <h3>${job.title}</h3>
+          <p>${job.company} • ${job.location}</p>
+          <p>${job.description}</p>
+          <div class="job-tags">
+            ${job.tags.map(tag => `<span class="job-tag">${tag}</span>`).join('')}
+          </div>
+        </div>
+      `).join('');
+  
+      document.querySelectorAll('.job-card').forEach(card => {
+        card.addEventListener('click', function() {
+          const selectedJobTitle = this.getAttribute('data-job-title');
+          localStorage.setItem('selectedJob', selectedJobTitle);
+          window.location.href = "{{ url_for('employment_application') }}";
+        });
+      });
+  
+      document.querySelectorAll('.job-card').forEach(card => {
+        observer.observe(card);
+      });
+    }
+  
+    // تصنيف الفلاتر
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelector('.filter-btn.active')?.classList.remove('active');
+        btn.classList.add('active');
+        currentCategory = btn.dataset.category;
+        generateJobs();
+      });
+    });
+  
+    // البحث
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      currentSearch = e.target.value.trim().toLowerCase();
+      generateJobs();
+    });
+  
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) {
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = 'translateY(0)';
         }
-
-        // فلترة الوظائف
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelector('.filter-btn.active').classList.remove('active');
-                btn.classList.add('active');
-            });
-        });
-
-        // تأثيرات التمرير
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    entry.target.style.opacity = 1;
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.job-card').forEach(card => {
-            card.style.opacity = 0;
-            card.style.transform = 'translateY(50px)';
-            observer.observe(card);
-        });
-
-        // التهيئة
-        window.addEventListener('DOMContentLoaded', generateJobs);
-
-
-        // تأثير زر التقديم
-        document.querySelector('.apply-button').addEventListener('click', function(e) {
-            let ripple = document.createElement('span');
-            ripple.className = 'ripple';
-            this.appendChild(ripple);
-            
-            setTimeout(() => ripple.remove(), 500);
-        });
-
-        // تهيئة الصفحة
-        window.onload = createJobCards;
-    </script>
+      });
+    }, { threshold: 0.1 });
+  
+    window.addEventListener('DOMContentLoaded', () => generateJobs());
+  </script>
+  
+  
+  
 </body>
 </html>
-
