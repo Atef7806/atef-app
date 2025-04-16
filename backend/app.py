@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 import threading
+import time
 
 app = Flask(__name__)
 
@@ -19,10 +20,6 @@ def get_db_connection():
         conn.execute("PRAGMA synchronous=NORMAL;")  # تعديل إعدادات التزامن (اختياري)
 
         return conn
-
-
-# ====== تحديث الجدول بإضافة الأعمدة المفقودة ======
-import time
 
 # ====== تحديث الجدول بإضافة الأعمدة المفقودة ======
 def update_table():
@@ -44,7 +41,6 @@ def update_table():
             print(f"خطأ أثناء التعديل: {e}")
             time.sleep(2)  # الانتظار لثواني قبل المحاولة مرة أخرى
     print("تعذر إجراء التعديل بعد عدة محاولات.")
-
 
 # استدعاء دالة تحديث الجدول لتأكد من إضافة الأعمدة الجديدة
 update_table()
@@ -197,7 +193,6 @@ def submit_application():
         address = data.get('address')
         currently_employed = data.get('currentlyEmployed')
 
-        # البيانات الجديدة
         interview_status = data.get('interviewStatus')
         interview_date = data.get('interviewDate')
         interview_time = data.get('interviewTime')
@@ -205,10 +200,12 @@ def submit_application():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # حذف بيانات قديمة (اختياري)
-        cursor.execute("DELETE FROM applications WHERE name = ? AND phone = ?", (name, phone))
+        # التحقق من وجود طلب مسبق بنفس الاسم ورقم الهاتف
+        existing = cursor.execute("SELECT * FROM applications WHERE name = ? AND phone = ?", (name, phone)).fetchone()
+        if existing:
+            conn.close()
+            return "<h3 style='color:green;'>تم إرسال طلبك سابقًا، نحن بالفعل نستعرضه ✅</h3>"
 
-        # إدخال البيانات
         cursor.execute(''' 
             INSERT INTO applications 
             (name, nationality, birth_date, religion, gender, marital_status, address, phone, currently_employed, interview_status, interview_date, interview_time) 
@@ -231,13 +228,11 @@ def submit_application():
         conn.commit()
         conn.close()
 
-        return redirect(url_for('employment_interviews_page'))
-
+        return render_template('application_submitted.html')  # بدل redirect
 
     except Exception as e:
         print(f"خطأ أثناء الحفظ: {e}")
         return "حدث خطأ أثناء إرسال الطلب"
-
 
 # دالة حذف طلب التوظيف
 @app.route('/delete_application/<int:application_id>', methods=['GET'])
