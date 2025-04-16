@@ -51,6 +51,9 @@ def update_table():
 update_table()
 
 # ====== صفحات الواجهة العامة ======
+
+
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -90,6 +93,10 @@ def signup():
 @app.route('/companies')
 def companies():
     return render_template('companies.html')
+
+
+
+
 
 @app.route('/seeker-profile')
 def seeker_profile():
@@ -176,9 +183,10 @@ def forgot_password():
     return render_template('forgot_password.html')
 
 
-@app.route("/profile")
+@app.route('/profile')
 def profile():
-    return render_template("profile.html")  # تأكد من وجود الملف profile.html في مجلد templates
+    return render_template('profile.html')
+ # تأكد من وجود الملف profile.html في مجلد templates
 
 # ====== استقبال طلب التوظيف ======
 

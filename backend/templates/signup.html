@@ -442,7 +442,8 @@ function handleSubmit(e) {
         hideLoading();
         showNotification('تم إنشاء الحساب بنجاح! جاري تحويلك...', 'success');
         // Redirect to profile.html after a successful account creation
-        window.location.href = 'profile.html';
+        window.location.href = "{{ url_for('profile') }}";
+
     }, 2000);
 }
 
