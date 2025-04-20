@@ -254,12 +254,14 @@
 
         <main class="jobs-grid" id="jobsGrid"></main>
 
-        <form method="POST" action="{{ url_for('submit_application') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ url_for('employment_application') }}" enctype="multipart/form-data">
             <h2>البيانات الشخصية</h2>
 
             <label for="job">الوظيفة المختارة</label>
             <input type="text" id="selectedJob" name="selectedJob" readonly required>
-
+            <label for="email">البريد الإلكتروني</label>
+            <input type="email" id="email" name="email" required>
+            
             <label for="name">الاسم الكامل</label>
             <input type="text" id="name" name="name" required>
 
@@ -293,11 +295,46 @@
             <label for="cv">رفع السيرة الذاتية</label>
             <input type="file" id="cv" name="cvInput" required>
             <p id="file-name" style="color: #333; margin-top: 5px;"></p>
-            <p id="upload-status" style="color: green; margin-top: 10px; display: none;">جاري رفع السيرة الذاتية...</p>
+
+            <!-- شريط التقدم -->
+            <div id="upload-container" style="display: none;">
+                <p id="upload-status" style="color: green; margin-top: 10px;">جاري رفع السيرة الذاتية...</p>
+                <progress id="upload-progress" value="0" max="100" style="width: 100%; height: 20px;"></progress>
+            </div>
 
             <button type="submit">إرسال الطلب</button>
         </form>
     </div>
+
+    <script>
+        const fileInput = document.getElementById('cv');
+        const fileName = document.getElementById('file-name');
+        const uploadStatus = document.getElementById('upload-status');
+        const uploadContainer = document.getElementById('upload-container');
+        const uploadProgress = document.getElementById('upload-progress');
+
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // عرض اسم الملف
+                fileName.textContent = file.name;
+                // عرض شريط التقدم
+                uploadContainer.style.display = 'block';
+                
+                // محاكاة تقدم رفع الملف
+                let progress = 0;
+                const interval = setInterval(function() {
+                    progress += 10;
+                    uploadProgress.value = progress;
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        uploadStatus.textContent = "تم رفع السيرة الذاتية بنجاح!";
+                    }
+                }, 500); // زيادة التقدم كل نصف ثانية
+            }
+        });
+    </script>
+</body>
 
     <script>
         const jobs = [

@@ -1,24 +1,6 @@
-import sqlite3
+from models import db
+from app import app  # تأكد أن app موجود فعلاً في ملف app.py
 
-conn = sqlite3.connect('database.db')
-c = conn.cursor()
-
-c.execute('''
-    CREATE TABLE IF NOT EXISTS applications (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        full_name TEXT,
-        nationality TEXT,
-        birth_date TEXT,
-        religion TEXT,
-        gender TEXT,
-        marital_status TEXT,
-        address TEXT,
-        phone TEXT,
-        currently_employed TEXT
-    )
-''')
-
-conn.commit()
-conn.close()
-
-print("تم إنشاء قاعدة البيانات بنجاح.")
+with app.app_context():
+    db.create_all()
+    print("✅ Database created successfully from models.py!")

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>تم إرسال طلبك</title>
+    <style>
+        body {
+            font-family: Arial;
+            direction: rtl;
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 50px;
+        }
+        .success-box {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #aaa;
+            display: inline-block;
+        }
+        .success-box h1 {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-box">
+        <h1>🎉 تم إرسال طلبك بنجاح!</h1>
+        <p>سنتواصل معك في حال تم قبولك للمقابلة.</p>
+        <a href="{{ url_for('home_page') }}">رجوع للصفحة الرئيسية</a>
+    </div>
+</body>
+</html>

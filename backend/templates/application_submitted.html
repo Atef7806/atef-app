@@ -1,15 +1,79 @@
-<!-- templates/application_submitted.html -->
 <!DOCTYPE html>
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
     <title>تم إرسال الطلب</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            background-color: #f5f5f5;
+            text-align: center;
+            padding-top: 50px;
+        }
+        .result-box {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            width: 50%;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .result-box h2 {
+            color: #4CAF50;
+        }
+        .match {
+            font-size: 1.2em;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        /*  ====== تصميم البار ====== */
+        .progress-bar-container {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 25px;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            height: 25px;
+            width: 0%;
+            background-color: #4CAF50;
+            border-radius: 25px;
+            text-align: center;
+            color: white;
+            line-height: 25px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <h2 style="text-align: center; margin-top: 50px;">🎉 تم إرسال طلبك بنجاح!</h2>
-    <p style="text-align: center;">سيتم التواصل معك في أقرب وقت ممكن.</p>
-    <div style="text-align: center; margin-top: 20px;">
-        <a href="/" style="text-decoration: none; color: blue;">العودة للصفحة الرئيسية</a>
+
+    <div class="result-box">
+        <h2>✅ تم إرسال طلب التوظيف بنجاح</h2>
+        <p>{{ match_result }}</p>
+        {% if match_result %}
+            <div class="match">{{ match_result }}</div>
+
+            <!--  ====== عرض البار ====== -->
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar" style="width: 0%;">0%</div>
+            </div>
+
+            <!--  ====== JavaScript لعرض النسبة بشكل ديناميكي ====== -->
+            <script>
+                // استخراج النسبة من الرسالة
+                const matchResultText = "{{ match_result }}";
+                const matchPercentage = parseFloat(matchResultText.match(/(\d+(\.\d+)?)/)[0]);
+
+                // تحديث البار
+                const progressBar = document.getElementById("progress-bar");
+                progressBar.style.width = matchPercentage + "%";
+                progressBar.textContent = matchPercentage.toFixed(1) + "%";
+            </script>
+        {% endif %}
     </div>
+
 </body>
 </html>

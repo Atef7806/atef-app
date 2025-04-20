@@ -327,43 +327,48 @@
                     <p>صاحب عمل</p>
                 </div>
             </div>
-
+            
+            <!-- نحتفظ بالقيمة هنا -->
+            <input type="hidden" name="user_type" id="userTypeInput" required>
+            
             <div class="form-group">
                 <label>الاسم الكامل</label>
-                <input type="text" class="form-control" required 
+                <input type="text" class="form-control" name="full_name" required 
                        oninput="validateName(this)" 
                        placeholder="أدخل اسمك الثلاثي">
                 <div class="ai-suggestion" onclick="suggestName()">
                     <i class="fas fa-robot"></i> اقتراح اسم من الذكاء الاصطناعي
                 </div>
             </div>
-
+            
             <div class="form-group">
                 <label>البريد الإلكتروني</label>
-                <input type="email" class="form-control" required
+                <input type="email" class="form-control" name="email" required
                        oninput="validateEmail(this)">
             </div>
-
+            
             <div class="form-group">
                 <label>كلمة المرور</label>
-                <input type="password" class="form-control" required
+                <input type="password" class="form-control" name="password" required
                        oninput="checkPasswordStrength(this)">
                 <div class="password-strength">
                     <div class="strength-bar"></div>
                 </div>
             </div>
-
+            
             <div class="captcha-container">
                 <div class="captcha-text" id="captchaText">5 + 3</div>
-                <input type="text" class="form-control" 
+                <input type="text" class="form-control" name="captcha_answer"
                        placeholder="أدخل ناتج الجمع" required>
             </div>
-
+            
             <button type="submit" class="submit-btn">
                 إنشاء حساب
                 <i class="fas fa-magic"></i>
             </button>
         </form>
+        
+        
 
         <div class="login-link">
             لديك حساب بالفعل؟ <a href="/login">سجل دخولك الآن</a>
@@ -434,6 +439,7 @@
 
         // Form Submission
         // Form Submission
+// Form Submission
 function handleSubmit(e) {
     e.preventDefault();
     showLoading();
@@ -442,10 +448,11 @@ function handleSubmit(e) {
         hideLoading();
         showNotification('تم إنشاء الحساب بنجاح! جاري تحويلك...', 'success');
         // Redirect to profile.html after a successful account creation
-        window.location.href = "{{ url_for('profile') }}";
+        window.location.href = "{{ url_for('profile') }}";  // تأكد من تخصيص المسار الصحيح هنا
 
     }, 2000);
 }
+
 
 
         // UI Helpers

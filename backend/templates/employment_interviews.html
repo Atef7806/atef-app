@@ -195,6 +195,40 @@
         padding: 20px 0;
         margin-top: 50px;
     }
+
+    .result-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 30px;
+    }
+
+    .result-container h1 {
+        font-size: 2.5em;
+        color: #4CAF50;
+    }
+
+    .result-container p {
+        font-size: 1.5em;
+    }
+
+    .result-container .result {
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    .result-container .success {
+        color: green;
+    }
+
+    .result-container .warning {
+        color: orange;
+    }
+
+    .result-container .failure {
+        color: red;
+    }
 </style>
 
 <body>
@@ -203,6 +237,23 @@
         <h1>نظام التوظيف الإلكتروني</h1>
         <p>مقابلات التوظيف الذكية باستخدام الذكاء الاصطناعي</p>
     </header>
+
+    {% if last_application %}
+    <p>الوظيفة: {{ last_application['job_title'] }}</p>
+    <p>نص السيرة الذاتية: {{ last_application['cv_text'] }}</p>
+    {% else %}
+    {% endif %}
+
+    <!-- رسالة التأكيد بعد إرسال الطلب -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
 
     <!-- جدول المقابلات -->
     <section class="schedule-section">
@@ -214,8 +265,8 @@
                         <th>التاريخ</th>
                         <th>الوقت</th>
                         <th>المرشح</th>
-                        <th>حالة المقابلة</th>
-                        <th>الملفات</th> <!-- إضافة عمود الملفات -->
+                        <th>حالة المقابلة</th> <!-- إضافة عمود حالة المقابلة هنا -->
+                        <th>الملفات</th>
                         <th>إجراءات</th>
                     </tr>
                 </thead>
@@ -225,92 +276,88 @@
                         <td>{{ application['interview_date'] }}</td>
                         <td>{{ application['interview_time'] }}</td>
                         <td>{{ application['name'] }}</td>
-                        <td>
-                            <span class="status {% if application['interview_status'] == 'pending' %} pending {% else %} completed {% endif %}">
-                                {{ application['interview_status'] }}
-                            </span>
+                        <td id="status-{{ application['id'] }}">
+                            {{ application['status'] }} <!-- هنا يتم عرض حالة المقابلة -->
                         </td>
                         <td>
                             {% if application['cv_path'] %}
-                                <a href="{{ url_for('static', filename=application['cv_path']) }}" download="{{ application['cv_path'] }}">عرض/تنزيل الملف</a>
+                            <a href="{{ url_for('static', filename=application['cv_path']) }}" download="{{ application['cv_path'] }}">عرض/تنزيل الملف</a>
                             {% else %}
-                                لا يوجد ملف
+                            لا يوجد ملف
                             {% endif %}
                         </td>
-                        <!-- إضافة عمود التاريخ والوقت الذي تم فيه رفع الطلب -->
-                        <td>{{ application['created_at'] }}</td>
                         <td>
-                            <button class="btn-start">بدء المقابلة</button>
-                            <a href="{{ application['interview_link'] }}" target="_blank">
-                                <button class="btn-start">بدء المقابلة</button>
-                            </a>
-                            <a href="{{ url_for('delete_application', application_id=application.id) }}" 
-                               class="btn-delete" 
-                               onclick="return confirm('هل أنت متأكد من أنك تريد حذف هذا الطلب؟')">
-                               حذف
-                            </a>
+                            <a href="{{ url_for('start_interview', application_id=application['id']) }}" class="btn-start">بدء المقابلة</a>
+                            <form action="{{ url_for('delete_application', application_id=application['id']) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من أنك تريد حذف هذا الطلب؟')">
+                                <button class="delete-btn" data-id="{{ application.id }}">حذف</button>
+                            </form>
+                        </td>
+                    </tr>
+                
+                    <!-- نتيجة التحليل لكل متقدم -->
+                    <tr>
+                        <td colspan="6">
+                            <div class="result-container">
+                                <h1>نتيجة تحليل السيرة الذاتية</h1>
+                                <p>الوظيفة: {{ application['job_title'] }}</p>
+                                <p>اسم المتقدم: {{ application['name'] }}</p>
+                                <p>نسبة التوافق: {{ application['match_percentage'] or 0 }}%</p>
+                
+                                {% if application['match_percentage'] is not none and application['match_percentage'] >= 80 %}
+                                    <p class="result success">المتقدم مؤهل بنسبة عالية!</p>
+                                {% elif application['match_percentage'] is not none and application['match_percentage'] >= 50 %}
+                                    <p class="result warning">المتقدم مؤهل بنسبة متوسطة. يمكن النظر فيه.</p>
+                                {% else %}
+                                    <p class="result failure">المتقدم غير مؤهل بشكل كافي.</p>
+                                {% endif %}
+                
+                                <!-- نموذج لحذف السيرة الذاتية -->
+                                <form action="{{ url_for('delete_application', application_id=application['id']) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من أنك تريد حذف هذا الطلب؟')">
+                                    <button type="submit" class="btn-delete">حذف</button>
+                                </form>
+                                
+                                <!-- زر اختبار السيرة الذاتية -->
+                                <button class="btn btn-primary" onclick="testCv({{ application['id'] }})">اختبار السيرة الذاتية</button>
+                                <div id="cv-result-{{ application['id'] }}" style="margin-top: 20px;"></div>
+                
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
-                
             </table>
         </div>
     </section>
 
-    <!-- تقييم الذكاء الاصطناعي -->
-    <section class="ai-evaluation">
-        <h2>تقييم الذكاء الاصطناعي</h2>
-        <div class="ai-analysis">
-            <div class="ai-card">
-                <i class="fas fa-brain"></i>
-                <h3>تحليل لغة الجسد</h3>
-                <p>يقوم الذكاء الاصطناعي بتحليل لغة الجسد للمرشح أثناء المقابلة.</p>
-            </div>
-            <div class="ai-card">
-                <i class="fas fa-microphone"></i>
-                <h3>تحليل الصوت</h3>
-                <p>يقوم الذكاء الاصطناعي بتحليل نبرة الصوت وطلاقة الحديث.</p>
-            </div>
-        </div>
-    </section>
+    <!-- Footer -->
+    <footer>
+        <p>جميع الحقوق محفوظة © 2025</p>
+    </footer>
 
-    <!-- تكامل مع أدوات الفيديو -->
-    <section class="video-integration">
-        <h2>إجراء المقابلات عن بعد</h2>
-        <div class="video-buttons">
-            <button class="video-btn google-meet">
-                <i class="fab fa-google"></i> Google Meet
-            </button>
-            <button class="video-btn zoom">
-                <i class="fab fa-zoom"></i> Zoom
-            </button>
-            <button class="video-btn microsoft-teams">
-                <i class="fab fa-microsoft"></i> Teams
-            </button>
-        </div>
-    </section>
-
+    <!-- JavaScript -->
     <script>
-        // script.js
-        document.querySelectorAll('.btn-start').forEach(button => {
-            button.addEventListener('click', () => {
-                alert('تم بدء المقابلة! سيتم تحويلك إلى أداة الفيديو المختارة.');
-            });
-        });
+        function testCv(applicationId) {
+            fetch(`/test_cv/${applicationId}`)  // تأكد من أن الراوت هو الصحيح
+                .then(response => response.json())
+                .then(data => {
+                    const resultDiv = document.getElementById(`cv-result-${applicationId}`);
+                    resultDiv.innerHTML = `
+                        <h3>نتيجة الاختبار:</h3>
+                        <p>نسبة التوافق: ${data.match_percentage}%</p>
+                        <p>${data.message}</p>
+                    `;
 
-        document.querySelectorAll('.btn-view').forEach(button => {
-            button.addEventListener('click', () => {
-                alert('عرض تقييم الذكاء الاصطناعي للمرشح.');
-            });
-        });
-
-        document.querySelectorAll('.video-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                const tool = button.textContent.trim();
-                alert(`سيتم تحويلك إلى ${tool} لإجراء المقابلة.`);
-            });
-        });
+                    const statusCell = document.getElementById(`status-${applicationId}`);
+                    statusCell.innerHTML = data.match_percentage >= 80 ? "مؤهل" : "غير مؤهل";
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
     </script>
+
 </body>
 </html>
+
+    
+

@@ -1,19 +1,47 @@
 import sqlite3
 
-# الاتصال بقاعدة البيانات (غالبًا اسمها كده، لكن لو مختلف قوله لي)
-conn = sqlite3.connect('applications.db')  # غيّر الاسم لو مختلف
-
-cursor = conn.cursor()
+def get_db_connection():
+    conn = sqlite3.connect('recruitment.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
 try:
-    # محاولة إضافة عمود جديد اسمه cv_path
-    cursor.execute("ALTER TABLE applications ADD COLUMN cv_path TEXT")
-    print("✅ تم إضافة العمود cv_path بنجاح.")
-except sqlite3.OperationalError as e:
-    if "duplicate column name" in str(e):
-        print("⚠️ العمود موجود بالفعل.")
-    else:
-        print(f"❌ خطأ أثناء الإضافة: {e}")
+    conn = get_db_connection()
+    cursor = conn.cursor()
 
-conn.commit()
-conn.close()
+    # إيقاف المفاتيح الأجنبية مؤقتًا
+    cursor.execute("PRAGMA foreign_keys=off;")
+
+    # إنشاء الجدول الجديد
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS jobs_new (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        description TEXT NOT NULL,
+        department TEXT,  -- إضافة العمود الجديد
+        location TEXT NOT NULL,
+        requirements TEXT NOT NULL,
+        posted_date TEXT NOT NULL
+    );
+    """)
+
+    # نسخ البيانات من الجدول القديم إلى الجدول الجديد
+    cursor.execute("""
+    INSERT INTO jobs_new (id, title, description, department, location, requirements, posted_date)
+    SELECT id, title, description, department, location, requirements, posted_date FROM jobs;
+    """)
+
+    # حذف الجدول القديم
+    cursor.execute("DROP TABLE jobs;")
+
+    # تغيير اسم الجدول الجديد إلى الجدول القديم
+    cursor.execute("ALTER TABLE jobs_new RENAME TO jobs;")
+
+    # تفعيل المفاتيح الأجنبية مرة أخرى
+    cursor.execute("PRAGMA foreign_keys=on;")
+
+    conn.commit()
+    conn.close()
+    print("تم إضافة العمود department إلى جدول jobs بنجاح.")
+except Exception as e:
+    print(f"حدث خطأ أثناء التعديل: {e}")

@@ -111,22 +111,6 @@
             color: #764ba2;
         }
 
-        .ai-features {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-
         .role-selector {
             display: flex;
             gap: 10px;
@@ -160,20 +144,11 @@
             }
         }
 
-        .password-strength {
-            height: 4px;
-            background: #e2e8f0;
-            margin-top: 8px;
-            border-radius: 2px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .strength-bar {
-            height: 100%;
-            width: 0;
-            background: #48bb78;
-            transition: width 0.3s ease;
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -181,7 +156,6 @@
     <div class="container">
         <div class="logo">
             <img src="{{ url_for('static', filename='img/ATEF2.jpeg') }}" alt="الذكاء التوظيفي">
-
         </div>
 
         <div class="role-selector">
@@ -190,20 +164,21 @@
         </div>
 
         <form id="loginForm" method="POST" action="{{ url_for('login') }}">
+           
+            
             <div class="form-group">
-                <label>البريد الإلكتروني</label>
-                <input type="email" class="form-control" name="email" required>
+                <label for="email">البريد الإلكتروني</label>
+                <input type="email" class="form-control" name="email" id="email" required>
             </div>
         
             <div class="form-group">
-                <label>كلمة المرور</label>
-                <input type="password" class="form-control" name="password" required>
+                <label for="password">كلمة المرور</label>
+                <input type="password" class="form-control" name="password" id="password" required>
             </div>
         
             <button type="submit" class="btn">تسجيل الدخول</button>
         </form>
         
-
         <div class="links">
             <a href="{{ url_for('forgot_password') }}">نسيت كلمة المرور؟</a>
             <br>
@@ -223,29 +198,11 @@
             });
         });
 
-        // تحليل قوة كلمة المرور
-        const passwordInput = document.getElementById('password');
-        const strengthBar = document.querySelector('.strength-bar');
-
-        passwordInput.addEventListener('input', () => {
-            const strength = calculatePasswordStrength(passwordInput.value);
-            strengthBar.style.width = `${strength}%`;
-        });
-
-        function calculatePasswordStrength(password) {
-            let strength = 0;
-            if (password.length >= 8) strength += 25;
-            if (/[A-Z]/.test(password)) strength += 25;
-            if (/[0-9]/.test(password)) strength += 25;
-            if (/[^A-Za-z0-9]/.test(password)) strength += 25;
-            return Math.min(strength, 100);
-        }
-
         // التحقق من النموذج
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
             
-            // إضافة تحقق متقدم باستخدام الذكاء الاصطناعي
+            // التحقق المتقدم باستخدام الذكاء الاصطناعي
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
