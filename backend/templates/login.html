@@ -251,6 +251,23 @@
                 showError('فشل تسجيل الدخول. الرجاء التحقق من البيانات');
             }
         }
+
+        <
+    // عند تحميل الصفحة، نقوم بتعبئة الحقول باستخدام البيانات المخزنة
+    window.onload = function() {
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        if (userData) {
+            document.getElementById('email').value = userData.email;
+            document.getElementById('password').value = userData.password;
+        }
+    }
+
+
     </script>
+
+{% if error %}
+<div class="error-message">{{ error }}</div>
+{% endif %}
+
 </body>
 </html>

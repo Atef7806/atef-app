@@ -311,12 +311,16 @@
 
         <div class="header">
             <h1>إنشاء حساب جديد</h1>
-            <a href="{{ url_for('signup') }}">إنشاء حساب جديد</a>
+            <a href="{{ url_for('signup') }}">إنشاء حساب</a>
+
+
+
 
             <p>انضم إلى نظام التوظيف الذكي واستفد من تقنيات الذكاء الاصطناعي المتقدمة</p>
         </div>
 
-        <form id="signupForm" onsubmit="handleSubmit(event)">
+        <form id="signupForm" method="POST" onsubmit="handleSubmit(event)">
+            <!-- اختيار نوع المستخدم -->
             <div class="user-type">
                 <div class="user-type-btn" onclick="selectUserType(this, 'job-seeker')">
                     <i class="fas fa-user-graduate"></i>
@@ -328,45 +332,53 @@
                 </div>
             </div>
             
-            <!-- نحتفظ بالقيمة هنا -->
-            <input type="hidden" name="user_type" id="userTypeInput" required>
-            
+            <!-- حفظ نوع المستخدم في حقل مخفي -->
+            <input type="hidden" name="role" value="job-seeker" id="roleInput">  <!-- هنا -->
+        
+            <!-- حقل اسم المستخدم -->
+            <div class="form-group">
+                <label>اسم المستخدم</label>
+                <input type="text" class="form-control" name="username" required placeholder="أدخل اسم المستخدم">
+            </div>
+        
+            <!-- حقل الاسم الكامل -->
             <div class="form-group">
                 <label>الاسم الكامل</label>
-                <input type="text" class="form-control" name="full_name" required 
-                       oninput="validateName(this)" 
-                       placeholder="أدخل اسمك الثلاثي">
+                <input type="text" class="form-control" name="full_name" required oninput="validateName(this)" placeholder="أدخل اسمك الثلاثي">
                 <div class="ai-suggestion" onclick="suggestName()">
                     <i class="fas fa-robot"></i> اقتراح اسم من الذكاء الاصطناعي
                 </div>
             </div>
-            
+        
+            <!-- حقل البريد الإلكتروني -->
             <div class="form-group">
                 <label>البريد الإلكتروني</label>
-                <input type="email" class="form-control" name="email" required
-                       oninput="validateEmail(this)">
+                <input type="email" class="form-control" name="email" required oninput="validateEmail(this)">
             </div>
-            
+        
+            <!-- حقل كلمة المرور -->
             <div class="form-group">
                 <label>كلمة المرور</label>
-                <input type="password" class="form-control" name="password" required
-                       oninput="checkPasswordStrength(this)">
+                <input type="password" class="form-control" name="password" required oninput="checkPasswordStrength(this)">
                 <div class="password-strength">
                     <div class="strength-bar"></div>
                 </div>
             </div>
-            
+        
+            <!-- حقل كابتشا -->
             <div class="captcha-container">
                 <div class="captcha-text" id="captchaText">5 + 3</div>
-                <input type="text" class="form-control" name="captcha_answer"
-                       placeholder="أدخل ناتج الجمع" required>
+                <input type="text" class="form-control" name="captcha_answer" placeholder="أدخل ناتج الجمع" required>
             </div>
-            
+        
+            <!-- زر الإرسال -->
             <button type="submit" class="submit-btn">
                 إنشاء حساب
                 <i class="fas fa-magic"></i>
             </button>
         </form>
+        
+        
         
         
 
@@ -389,15 +401,22 @@
 
         // User Type Selection
         function selectUserType(btn, type) {
-            document.querySelectorAll('.user-type-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            // AI-based suggestions based on user type
-            if(type === 'employer') {
-                showAISuggestions('employer');
-            } else {
-                showAISuggestions('job-seeker');
-            }
-        }
+    document.querySelectorAll('.user-type-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const roleInput = document.getElementById('roleInput');
+    if (type === 'employer') {
+        roleInput.value = 'employer';  // تعيين "صاحب عمل"
+    } else {
+        roleInput.value = 'job-seeker';  // تعيين "باحث عن عمل"
+    }
+
+    // التحقق من قيمة role في الـ console
+    console.log('Selected role:', roleInput.value);
+}
+
+
+
 
         // AI Name Suggestion
         function suggestName() {
@@ -440,18 +459,36 @@
         // Form Submission
         // Form Submission
 // Form Submission
-function handleSubmit(e) {
-    e.preventDefault();
-    showLoading();
-    // Simulate AI processing
-    setTimeout(() => {
-        hideLoading();
-        showNotification('تم إنشاء الحساب بنجاح! جاري تحويلك...', 'success');
-        // Redirect to profile.html after a successful account creation
-        window.location.href = "{{ url_for('profile') }}";  // تأكد من تخصيص المسار الصحيح هنا
+function handleSubmit(event) {
+    event.preventDefault();
 
-    }, 2000);
+    const formData = new FormData(event.target);
+    const role = document.getElementById('roleInput').value;
+formData.append('role', role);
+
+    
+    // التحقق من إرسال الحقل role
+    console.log("Form data before sending:", formData);
+
+    fetch('/signup', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())  
+    .then(data => {
+        if (data.success) {
+            window.location.href = data.redirect;  // إعادة التوجيه لصفحة الشكر
+        } else {
+            alert(data.message);  // عرض رسالة الخطأ للمستخدم
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('حدث خطأ غير متوقع');
+    });
 }
+
+
 
 
 

@@ -1,0 +1,40 @@
+<!-- thankyou.html -->
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>تم التسجيل بنجاح</title>
+    <style>
+        body {
+            text-align: center;
+            padding-top: 100px;
+            font-family: 'Cairo', sans-serif;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎉 شكراً على التسجيل!</h1>
+    <p>تم إنشاء حسابك بنجاح. يمكنك الآن تسجيل الدخول أو استكشاف المنصة.</p>
+
+    <!-- رابط تسجيل الدخول مع إضافة دالة storeUserData() -->
+    <a href="/login" onclick="storeUserData()">سجل الدخول الآن</a>
+
+    <!-- إضافة الكود هنا قبل وسم </body> -->
+    <script>
+        function storeUserData() {
+            const userData = {
+                username: 'Atef7806',  // على سبيل المثال
+                email: 'eisd794@gmail.com',  // على سبيل المثال
+                password: 'A1s2D3f4'  // على سبيل المثال
+            };
+
+            // تخزين البيانات في localStorage
+            localStorage.setItem('userData', JSON.stringify(userData));
+        }
+    </script>
+</body>
+</html>

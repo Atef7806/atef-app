@@ -1,7 +1,7 @@
 import os
 print("Using DB:", os.path.abspath("recruitment.db"))
 from flask import jsonify
-
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask import Flask, render_template, request, redirect, url_for, flash
 import os
 import sqlite3
@@ -15,10 +15,18 @@ from routes.job_routes import bp as job_routes_bp
 from flask import Flask
 
 app = Flask(__name__)
+
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///recruitment.db'  # تحديد المسار الصحيح إلى قاعدة البيانات
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # لتقليل التحذيرات من SQLAlchemy
+
 app.secret_key = 'your-very-secret-key-123'  # مهم علشان flash و session
 
 # باقي الدوال والراوتات
-app.register_blueprint(job_routes_bp, url_prefix='/jobs')
+app.secret_key = 'your-very-secret-key-123'  # مهم علشان flash و session
+
+
 
 
 # إعدادات الأمان
@@ -38,8 +46,9 @@ def get_db_connection():
         print("Database connected successfully!")
         return conn
     except Exception as e:
-        print(f"Error connecting to database: {e}")
+        print(f"Error connecting to database: {e}")  # إذا كان هناك خطأ في الاتصال
         return None
+
 
 
 db_lock = threading.Lock()
@@ -196,50 +205,6 @@ def jobs():
     conn.close()
     return render_template('jobs.html', jobs=jobs_list, query=query)
 
-
-
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    try:
-        if request.method == 'POST':
-            # استخراج البيانات من النموذج
-            user_type = request.form.get('user_type')
-            full_name = request.form.get('full_name')
-            email = request.form.get('email')
-            password = request.form.get('password')
-            
-            # التحقق إذا كان البريد الإلكتروني موجودًا مسبقًا
-            conn = get_db_connection()
-            cursor = conn.cursor()
-            existing_user = cursor.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
-
-            if existing_user:
-                conn.close()
-                return jsonify({'success': False, 'message': 'البريد الإلكتروني موجود بالفعل. الرجاء اختيار بريد آخر.'})
-
-            # إدخال البيانات الجديدة في قاعدة البيانات
-            cursor.execute(''' 
-                INSERT INTO users (user_type, full_name, email, password) 
-                VALUES (?, ?, ?, ?)
-            ''', (user_type, full_name, email, password))
-
-            conn.commit()
-            conn.close()
-
-            return jsonify({'success': True})
-
-        return render_template('signup.html')
-
-    except Exception as e:
-        print(f"خطأ أثناء التسجيل: {e}")
-        return jsonify({'success': False, 'message': 'حدث خطأ أثناء التسجيل. يرجى المحاولة لاحقًا.'})
-
-
-
-
-from werkzeug.utils import secure_filename
-import os
-
 ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx'}
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')  # قم بتحديد المسار للمجلد الذي ترغب في تخزين الملفات فيه
 
@@ -249,11 +214,6 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-from flask import Flask, render_template, request
-import os
-from datetime import datetime
-from werkzeug.utils import secure_filename
 
 app = Flask(__name__, template_folder='templates')
 
@@ -326,8 +286,7 @@ def employment_application():
         finally:
             conn.close()
 
-        return redirect(url_for('success_page'))
-
+        return redirect(url_for('application_success'))
     return render_template('employment_application.html')
 
 
@@ -338,6 +297,105 @@ def test_db():
     conn.close()
     return f"عدد الطلبات المسجلة: {len(data)}"
 
+
+from flask import Flask, render_template, request, jsonify, redirect
+import sqlite3
+
+# تعديل دالة الاتصال بقاعدة البيانات
+def get_db_connection():
+    conn = sqlite3.connect('recruitment.db', timeout=10)  # زيادة المهلة لتفادي قفل قاعدة البيانات
+    conn.row_factory = sqlite3.Row
+    return conn
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    print("📥 دخلنا على /signup")  # Debug أول الصفحة
+
+    try:
+        if request.method == 'POST':
+            print("📤 طلب POST")  # Debug POST
+
+            # استخراج البيانات من النموذج
+            user_type = request.form.get('user_type')
+            username = request.form.get('username')
+            full_name = request.form.get('full_name')
+            email = request.form.get('email')
+            password = request.form.get('password')
+            role = request.form.get('role')  # إضافة هنا
+
+            print(f"Received role: {role}")
+
+            print(f"🧾 البيانات المستلمة:\nنوع المستخدم: {user_type}\nاسم المستخدم: {username}\nالاسم: {full_name}\nالإيميل: {email}\nكلمة المرور: {password}")
+
+            # التحقق من البريد الإلكتروني
+            conn = get_db_connection()  # الاتصال بقاعدة البيانات
+            cursor = conn.cursor()
+            existing_user = cursor.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
+
+            if existing_user:  # لو البريد الإلكتروني موجود مسبقًا
+                conn.close()
+                print("❌ البريد موجود مسبقًا")
+                return jsonify({'success': False, 'message': 'البريد الإلكتروني موجود بالفعل. الرجاء اختيار بريد آخر.'})
+
+            # إدخال المستخدم الجديد في قاعدة البيانات
+            try:
+                cursor.execute(''' 
+                    INSERT INTO users (user_type, username, full_name, email, password, role) 
+                    VALUES (?, ?, ?, ?, ?, ?) 
+                ''', (user_type, username, full_name, email, password, role))
+                conn.commit()
+                print("✅ تم التسجيل بنجاح")
+            except Exception as e:
+                print(f"💥 خطأ أثناء إدخال البيانات في قاعدة البيانات: {e}")
+                conn.rollback()  # التراجع في حالة الخطأ
+                conn.close()
+                return jsonify({'success': False, 'message': 'حدث خطأ أثناء التسجيل. يرجى المحاولة لاحقًا.'})
+
+            conn.close()
+
+            # إرسال الـ response مع التوجيه إلى صفحة الشكر
+            return jsonify({'success': True, 'redirect': '/thankyou'})  # إرسال الـ redirect هنا
+
+        return render_template('signup.html')
+
+    except Exception as e:
+        print(f"💥 خطأ أثناء التسجيل: {e}")
+        return jsonify({'success': False, 'message': 'حدث خطأ أثناء التسجيل. يرجى المحاولة لاحقًا.'})
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        user = cursor.execute("SELECT * FROM users WHERE email = ? AND password = ?", (email, password)).fetchone()
+        conn.close()
+
+        if user:
+            # حفظ معلومات المستخدم في session
+            session['user_id'] = user['id']
+            session['username'] = user['username']
+            print("✅ تسجيل الدخول ناجح")
+            return redirect(url_for('dashboard'))  # توجه المستخدم للوحة التحكم
+        else:
+            print("❌ فشل تسجيل الدخول")
+            return render_template('login.html', error='البريد الإلكتروني أو كلمة المرور غير صحيحة')
+
+    return render_template('login.html')
+
+
+
+@app.route('/thankyou')
+def thankyou():
+    print("🎉 تم الوصول إلى صفحة الشكر!")  # سجل دخول إلى الصفحة
+    return render_template('thankyou.html')
+
+@app.route('/thank-you')
+def thank_you():
+    return render_template('thank_you.html')
 
 
 @app.route('/who-are-you')
@@ -400,19 +458,11 @@ def settings():
 def jobs():
     return render_template('jobs.html')
 
-
-@app.route('/login')
-def login():
-    return render_template('login.html')
-
 @app.route('/application_success')
 def application_success():
     return render_template('application_success.html')
 
 
-@app.route('/signup')
-def signup():
-    return render_template('signup.html')
 
 # تأكد من استيراد الموديل الخاص بالتطبيقات
 from models import Application  # استبدل هذا بالمسار الصحيح لموديل التطبيقات
@@ -550,20 +600,6 @@ def delete_application(application_id):
     return redirect(url_for('employment_interviews_page'))
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-app.run(debug=True)
 
 
 from flask import Flask
@@ -860,7 +896,8 @@ def show_all_data():
             print(f"الجدول {table_name} فارغ أو لا يحتوي على بيانات.")
     conn.close()
 
-    
+    print(app.url_map)
+
 
 # استدعاء دالة إضافة الوظيفة (يمكنك استدعاء الدوال الأخرى حسب الحاجة)
 add_job()
