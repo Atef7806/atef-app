@@ -15,9 +15,9 @@ git commit -m "شرح التعديل"
 git push origin main
 
 تشغيل السيرفر بايثون
-python run.py
+python ran.py
 Python app.py
-
+Python ran_final.py
 ------------------
 
 تشغيل السيرفر عام
@@ -36,3 +36,114 @@ fly deploy
 امر 
 pip install -r requirements.txt
 لتثبيت المكتبات جميعها 
+
+
+
+
+البيانات كامله خاصة بي الداتا بيز هي
+
+0	id	INTEGER	0		1
+1	username	TEXT	1		0
+2	password	TEXT	1		0
+3	role	TEXT	1		0
+4	full_name	TEXT	0		0
+5	email	TEXT	0		0
+6	user_type	TEXT	0		0
+جدول applications:
+0	id	INTEGER	0		1
+1	user_name	TEXT	1		0
+2	user_email	TEXT	0		0
+3	cv_text	TEXT	0		0
+4	cv_path	TEXT	0		0
+5	created_at	TEXT	0		0
+6	match_percentage	REAL	0		0
+7	job_id	INTEGER	0		0
+
+ جدول jobs:
+0	id	INTEGER	0		1
+1	title	TEXT	1		0
+2	description	TEXT	0		0
+3	department	TEXT	0		0
+4	location	TEXT	0		0
+5	requirements	TEXT	0		0
+6	posted_date	TEXT	0		0
+ جدول ai_evaluations:
+0	id	INTEGER	0		1
+1	application_id	INTEGER	0		0
+2	evaluation_date	TEXT	0		0
+3	match_percentage	REAL	0		0
+4	notes	TEXT	0		0
+جدول interviews
+0	id	INTEGER	0		1
+1	application_id	INTEGER	0		0
+2	interviewer	TEXT	0		0
+3	interview_date	TEXT	0		0
+4	interview_time	TEXT	0		0
+5	notes	TEXT	0		0
+6	result	TEXT	0		0
+ جدول sqlite_sequence:
+0	name		0		0
+1	seq		0		0
+
+
+
+
+اشرحلي الداتا بيز دي 
+CREATE TABLE "ai_evaluations" (
+	"id"	INTEGER,
+	"application_id"	INTEGER,
+	"evaluation_date"	TEXT,
+	"match_percentage"	REAL,
+	"notes"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	FOREIGN KEY("application_id") REFERENCES "applications"("id")
+);
+CREATE TABLE "applications" (
+	"id"	INTEGER,
+	"user_name"	TEXT NOT NULL,
+	"user_email"	TEXT,
+	"cv_text"	TEXT,
+	"cv_path"	TEXT,
+	"created_at"	TEXT,
+	"match_percentage"	REAL,
+	"job_id"	INTEGER,
+	"selected_job"	TEXT,
+	"job_requirements"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+CREATE TABLE "interviews" (
+	"id"	INTEGER,
+	"application_id"	INTEGER,
+	"interviewer"	TEXT,
+	"interview_date"	TEXT,
+	"interview_time"	TEXT,
+	"notes"	TEXT,
+	"result"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	FOREIGN KEY("application_id") REFERENCES "applications"("id")
+);
+CREATE TABLE "jobs" (
+	"id"	INTEGER,
+	"title"	TEXT NOT NULL,
+	"description"	TEXT,
+	"department"	TEXT,
+	"location"	TEXT,
+	"requirements"	TEXT,
+	"posted_date"	TEXT,
+	"keywords"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+CREATE TABLE "sqlite_sequence" (
+	"name"	,
+	"seq"	
+);
+CREATE TABLE "users" (
+	"id"	INTEGER,
+	"username"	TEXT NOT NULL,
+	"password"	TEXT NOT NULL,
+	"role"	TEXT NOT NULL,
+	"full_name"	TEXT,
+	"email"	TEXT,
+	"user_type"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);

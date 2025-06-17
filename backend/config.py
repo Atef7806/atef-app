@@ -1,31 +1,16 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
-from config import SECRET_KEY, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS, UPLOAD_FOLDER
+# config.py
+import os
 
-# إنشاء التطبيق
-app = Flask(__name__)
-CORS(app)
+basedir = os.path.abspath(os.path.dirname(__file__))
 
-# تحميل الإعدادات
-app.config['SECRET_KEY'] = SECRET_KEY
-app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-# قاعدة البيانات
-db = SQLAlchemy(app)
-
-# استيراد وتسجيل الراوتات (هنضيفهم بعدين)
-from routes.auth_routes import auth_bp
-from routes.job_routes import job_bp
-from routes.application_routes import application_bp
-from routes.interview_routes import interview_bp
-
-app.register_blueprint(auth_bp)
-app.register_blueprint(job_bp)
-app.register_blueprint(application_bp)
-app.register_blueprint(interview_bp)
-
-if __name__ == "__main__":
-    app.run(debug=True)
+class Config:
+    SECRET_KEY = 'your_secret_key_here'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'recruitment.db')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    UPLOAD_FOLDER = os.path.join(basedir, 'uploads', 'cvs')
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = 'eisd7954@gmail.com'
+    MAIL_PASSWORD = 'A1s2D3f4'
+    MAIL_ASCII_ATTACHMENTS = False

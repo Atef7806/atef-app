@@ -204,12 +204,16 @@
                 <a href="/"> <li class="nav-item"><span>🏠 الرئيسية</span></li></a>
                 <a href="/profile"> <li class="nav-item"><span>📝 ملفي الشخصي</span></li></a>
                 <a href="/notifications"> <li class="nav-item"><span>🔔 الإشعارات</span></li></a>
-                <a href="/jobs"><li class="nav-item"><span>💼 الوظائف المقترحة</span></li></a>
+                <a href="{{ url_for('employment_application') }}">
+                    <li class="nav-item">
+                        <span>💼 الوظائف المقترحة</span>
+                    </li>
+                </a>
+                
                 <a href="/settings"> <li class="nav-item"><span>⚙️ الإعدادات</span></li></a>
                 <a href="/logout"> <li class="nav-item"><span>🔒 تسجيل الخروج </span></li></a>
             </ul>
         </div>
-        
 
         <!-- Main Content -->
         <div class="main-content">
@@ -232,16 +236,14 @@
             <div class="jobs-grid">
                 <!-- Job Card 1 -->
                 <div class="job-card ai-recommended">
-                    
                     <h3>مطور ويب متقدم</h3>
                     <p>شركة التقنية الرقمية</p>
                     <div class="skills">
                         <span class="skill-tag">JavaScript</span>
                         <span class="skill-tag">React</span>
                         <span class="skill-tag">Node.js</span>
-                        
                     </div><br>
-                   <a href="employment application.html"><button class="apply-btn">تقدم الآن</button></a> 
+                    <a href="#" class="apply-btn" data-job-title="مطور ويب متقدم">تقدم الآن</a>
                 </div>
 
                 <!-- Job Card 2 -->
@@ -252,7 +254,7 @@
                         <span class="skill-tag">Photoshop</span>
                         <span class="skill-tag">Illustrator</span>
                     </div><br>
-                    <a href="employment application.html"> <button class="apply-btn">تقدم الآن</button></a>
+                    <a href="#" class="apply-btn" data-job-title="مصمم جرافيك">تقدم الآن</a>
                 </div>
             </div>
         </div>
@@ -281,13 +283,36 @@
         });
 
         // Job Card Interactions
+        document.querySelectorAll('.apply-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const selectedJobTitle = this.getAttribute('data-job-title');
+                localStorage.setItem('selectedJob', selectedJobTitle);
+
+                // التحقق من حالة تسجيل الدخول باستخدام Flask-Login
+                if (!{{ current_user.is_authenticated|tojson }}) {
+                    // إذا لم يكن المستخدم مسجلاً دخول، إعادة توجيه إلى صفحة التسجيل
+                    window.location.href = "/auth/signup";  // أو "/auth/login" لتسجيل الدخول
+                } else {
+                    // إذا كان المستخدم مسجلاً دخول، الانتقال إلى صفحة تقديم الطلب
+                    window.location.href = "/employment_application";  // تأكد من أن هذه هي المسار الصحيح
+                }
+            });
+        });
+
+        // Job Card Interactions (ملاحظة: تم تعديل الكود لاستخدام btn و job-card)
         document.querySelectorAll('.job-card').forEach(card => {
             card.addEventListener('click', function(e) {
-                if(!e.target.classList.contains('apply-btn')) {
+                if (!e.target.classList.contains('apply-btn')) {
                     this.classList.toggle('expanded');
                 }
             });
         });
+
+        // زر "أكمل ملفك الآن!"
+document.querySelector('.complete-profile').addEventListener('click', function () {
+    window.location.href = "/seeker_profile"; // أو "seeker_profile.html" حسب مسارك
+});
+
     </script>
 </body>
 </html>

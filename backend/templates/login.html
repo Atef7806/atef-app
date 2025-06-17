@@ -163,28 +163,29 @@
             <button class="role-btn" data-role="employer">صاحب عمل</button>
         </div>
 
-        <form id="loginForm" method="POST" action="{{ url_for('login') }}">
-           
-            
+        <form method="POST" action="{{ url_for('login') }}">
             <div class="form-group">
                 <label for="email">البريد الإلكتروني</label>
                 <input type="email" class="form-control" name="email" id="email" required>
             </div>
-        
+
             <div class="form-group">
                 <label for="password">كلمة المرور</label>
                 <input type="password" class="form-control" name="password" id="password" required>
             </div>
-        
+
             <button type="submit" class="btn">تسجيل الدخول</button>
         </form>
-        
+
         <div class="links">
             <a href="{{ url_for('forgot_password') }}">نسيت كلمة المرور؟</a>
             <br>
             <a href="{{ url_for('signup') }}">إنشاء حساب جديد</a>
         </div>
-        
+
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
     </div>
 
     <script>

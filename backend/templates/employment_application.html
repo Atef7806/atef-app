@@ -259,6 +259,9 @@
 
             <label for="job">الوظيفة المختارة</label>
             <input type="text" id="selectedJob" name="selectedJob" readonly required>
+            <input type="hidden" id="jobRequirements" name="jobRequirements">
+            <input type="hidden" id="jobId" name="jobId">
+
             <label for="email">البريد الإلكتروني</label>
             <input type="email" id="email" name="email" required>
             
@@ -296,7 +299,6 @@
             <input type="file" id="cv" name="cvInput" required>
             <p id="file-name" style="color: #333; margin-top: 5px;"></p>
 
-            <!-- شريط التقدم -->
             <div id="upload-container" style="display: none;">
                 <p id="upload-status" style="color: green; margin-top: 10px;">جاري رفع السيرة الذاتية...</p>
                 <progress id="upload-progress" value="0" max="100" style="width: 100%; height: 20px;"></progress>
@@ -316,12 +318,9 @@
         fileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
-                // عرض اسم الملف
                 fileName.textContent = file.name;
-                // عرض شريط التقدم
                 uploadContainer.style.display = 'block';
                 
-                // محاكاة تقدم رفع الملف
                 let progress = 0;
                 const interval = setInterval(function() {
                     progress += 10;
@@ -330,15 +329,13 @@
                         clearInterval(interval);
                         uploadStatus.textContent = "تم رفع السيرة الذاتية بنجاح!";
                     }
-                }, 500); // زيادة التقدم كل نصف ثانية
+                }, 500);
             }
         });
-    </script>
-</body>
 
-    <script>
         const jobs = [
             {
+                id: 1,
                 title: "مطور ذكاء اصطناعي",
                 company: "شركة المستقبل",
                 image: "https://source.unsplash.com/random/800x600?ai",
@@ -346,9 +343,11 @@
                 location: "الرياض",
                 tags: ["AI", "Python", "Machine Learning"],
                 category: "التقنية",
-                description: "تطوير أنظمة الذكاء الاصطناعي المتقدمة"
+                description: "تطوير أنظمة الذكاء الاصطناعي المتقدمة",
+                requirements: "Python, Machine Learning, Deep Learning, AI"
             },
             {
+                id: 2,
                 title: "مهندس برمجيات",
                 company: "Techno Arabia",
                 image: "https://source.unsplash.com/random/800x600?software",
@@ -356,9 +355,11 @@
                 location: "الخبر",
                 tags: ["JavaScript", "Node.js", "Backend"],
                 category: "التقنية",
-                description: "بناء تطبيقات ويب قوية وحديثة"
+                description: "بناء تطبيقات ويب قوية وحديثة",
+                requirements: "JavaScript, Node.js, Backend Development, REST API"
             },
             {
+                id: 3,
                 title: "مطور تطبيقات جوال",
                 company: "Digital Solutions",
                 image: "https://source.unsplash.com/random/800x600?mobile",
@@ -366,9 +367,11 @@
                 location: "الرياض",
                 tags: ["Flutter", "iOS", "Android"],
                 category: "التقنية",
-                description: "برمجة تطبيقات جوال باستخدام أحدث التقنيات"
+                description: "برمجة تطبيقات جوال باستخدام أحدث التقنيات",
+                requirements: "Flutter, iOS Development, Android Development, Dart"
             },
             {
+                id: 4,
                 title: "مصمم جرافيك",
                 company: "وكالة إبداعية",
                 image: "https://source.unsplash.com/random/800x600?design",
@@ -376,9 +379,11 @@
                 location: "جدة",
                 tags: ["Photoshop", "Illustrator", "UI/UX"],
                 category: "التصميم",
-                description: "تصميم هويات بصرية مبتكرة"
+                description: "تصميم هويات بصرية مبتكرة",
+                requirements: "Photoshop, Illustrator, UI/UX Design"
             },
             {
+                id: 5,
                 title: "محلل مالي",
                 company: "شركة استثمار",
                 image: "https://source.unsplash.com/random/800x600?finance",
@@ -386,7 +391,8 @@
                 location: "الرياض",
                 tags: ["Excel", "تحليل مالي", "تخطيط"],
                 category: "المالية",
-                description: "تحليل البيانات المالية وتقديم التقارير"
+                description: "تحليل البيانات المالية وتقديم التقارير",
+                requirements: "Financial Analysis, Excel, Financial Planning"
             }
         ];
 
@@ -395,7 +401,6 @@
 
         function generateJobs() {
             const grid = document.getElementById('jobsGrid');
-
             let filteredJobs = jobs.filter(job => {
                 const matchesCategory = currentCategory === "الكل" || job.category === currentCategory;
                 const matchesSearch =
@@ -419,9 +424,8 @@
                 </div>
             `).join('');
 
-            // إضافة التأثيرات بعد تحميل البيانات
             setTimeout(() => {
-                document.querySelectorAll('.job-card').forEach((card, index) => {
+                document.querySelectorAll('.job-card').forEach((card) => {
                     card.style.opacity = 1;
                     card.style.transform = 'translateY(0)';
                 });
@@ -429,10 +433,13 @@
         }
 
         function selectJob(title) {
-            document.getElementById('selectedJob').value = title;
-        }
+    const selected = jobs.find(job => job.title === title);
+    document.getElementById('selectedJob').value = selected.title;
+    document.getElementById('jobRequirements').value = selected.requirements || '';
+    document.getElementById('jobId').value = selected.id; // ← هنا نحط id
+}
 
-        // الفلاتر
+
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -442,14 +449,12 @@
             });
         });
 
-        // البحث
         document.getElementById('searchInput').addEventListener('input', event => {
             currentSearch = event.target.value.toLowerCase();
             generateJobs();
         });
 
-        // أول تحميل
-        generateJobs();
+        window.addEventListener('DOMContentLoaded', generateJobs);
     </script>
 </body>
 </html>

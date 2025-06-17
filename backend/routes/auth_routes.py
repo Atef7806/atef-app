@@ -1,20 +1,26 @@
-from flask import Blueprint, render_template, redirect, url_for, request
-from flask_login import login_user, logout_user, current_user
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from models import db, User  # تأكد من استيراد نموذج المستخدم بشكل صحيح
 
-bp = Blueprint('auth_routes', __name__)
+# تعريف Blueprint
+auth_bp = Blueprint('auth', __name__)
 
-@bp.route('/login', methods=['GET', 'POST'])
-def login():
-    # منطق تسجيل الدخول
+# دالة إنشاء حساب
+@auth_bp.route('/signup', methods=['GET', 'POST'])
+def signup():
     if request.method == 'POST':
+        # هنا يمكنك إضافة منطق التحقق من النموذج وتخزين بيانات المستخدم
         username = request.form['username']
         password = request.form['password']
-        # تحقق من صحة البيانات
-        return redirect(url_for('job_routes.get_jobs'))
+        role = request.form['role']
+        full_name = request.form['full_name']
+        email = request.form['email']
 
-    return render_template('login.html')
+        # إنشاء المستخدم وتخزينه في قاعدة البيانات
+        new_user = User(username=username, password=password, role=role, full_name=full_name, email=email)
+        db.session.add(new_user)
+        db.session.commit()
 
-@bp.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('auth_routes.login'))
+        flash('تم إنشاء الحساب بنجاح!', 'success')
+        return redirect(url_for('auth.login'))  # إعادة التوجيه لصفحة الدخول بعد النجاح
+
+    return render_template('signup.html')  # عرض نموذج التسجيل
