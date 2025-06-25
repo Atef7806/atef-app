@@ -527,7 +527,7 @@ nav {
 
     <div class="container">
         <nav>
-            <div class="logo"> 🤖 وظفني.ai</div>
+            <div class="logo"> 🤖 وظفني  Ai</div>
             <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
         
             <div class="nav-links">
@@ -572,21 +572,7 @@ nav {
                 </div>
             </div>
                 
-                <div class="ai-features">
-                    <div class="feature-card">
-                        <h3>مطابقة ذكية</h3>
-                        <p>نظام مطابقة الوظائف باستخدام التعلم العميق</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>تحليل السيرة الذاتية</h3>
-                        <p>تحليل CV ذكي مع نصائح تحسينية</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>مقابلات افتراضية</h3>
-                        <p>تمارين مقابلات مع مساعد افتراضي</p>
-                    </div>
-                </div>
-            </div>
+            
         </section>
     </div>
 <br>
@@ -769,5 +755,96 @@ nav {
     {% endif %}
   {% endwith %}
   
+  <section class="team-section">
+  <h3 style="text-align:center; color:white;">👨‍💻 المشاركون في المشروع</h3>
+  <ul style="list-style: none; padding: 0; text-align:center; color:#ddd; font-size: 18px;">
+    <li>✅ عاطف عبد الفتاح</li>
+    <li>✅ محمد أحمد</li>
+    <li>✅ أحمد خالد</li>
+  </ul>
+</section>
+<style>
+  .team-section {
+    background-color: #222;
+    padding: 2rem;
+    margin-top: 2rem;
+    border-top: 2px solid #555;
+  }
+</style>
+<!-- زر عرض صورة الفريق -->
+<button class="team-button" onclick="showTeamImage()">
+  <img src="/static/img/Screenshot.png" alt="Team" class="icon-thumb">
+  عرض فريق العمل
+</button>
+
+<!-- شاشة عرض الصورة (Modal) -->
+<div id="teamModal" class="team-modal" onclick="hideTeamImage()">
+  <img src="/static/img/Screenshot.png" alt="Team Full Image">
+</div>
+
+
+
+<style>
+  .team-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 1rem auto;
+  }
+
+  .icon-thumb {
+    width: 24px;
+    height: 24px;
+  }
+
+  .team-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.9);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .team-modal img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+  }
+
+  @media (max-width: 768px) {
+    .team-modal img {
+      width: 95%;
+      height: auto;
+    }
+
+    .team-button {
+      font-size: 16px;
+      padding: 8px 16px;
+    }
+  }
+</style>
+<script>
+  function showTeamImage() {
+    document.getElementById("teamModal").style.display = "flex";
+  }
+
+  function hideTeamImage() {
+    document.getElementById("teamModal").style.display = "none";
+  }
+</script>
+
+
 </body>
 </html>

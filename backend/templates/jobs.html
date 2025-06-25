@@ -69,18 +69,16 @@
   </div>
 
   <main class="jobs-grid" id="jobsGrid"></main>
-
-  <a href="#" id="applyButton">
-    <button class="apply-button">تقديم الآن</button>
-  </a>
-
   <script>
     const jobs = [
-      { title: "مطور ذكاء اصطناعي", company: "شركة المستقبل", image: "https://source.unsplash.com/random/800x600?ai", salary: "25,000 - 30,000 ر.س", location: "الرياض", tags: ["AI", "Python", "Machine Learning"], category: "التقنية", description: "تطوير أنظمة الذكاء الاصطناعي المتقدمة", requirements: "Python, Machine Learning, Deep Learning, AI" },
-      { title: "مهندس برمجيات", company: "Techno Arabia", image: "https://source.unsplash.com/random/800x600?software", salary: "22,000 - 27,000 ر.س", location: "الخبر", tags: ["JavaScript", "Node.js", "Backend"], category: "التقنية", description: "بناء تطبيقات ويب قوية وحديثة", requirements: "JavaScript, Node.js, Backend Development, REST API" },
-      { title: "مطور تطبيقات جوال", company: "Digital Solutions", image: "https://source.unsplash.com/random/800x600?mobile", salary: "20,000 - 25,000 ر.س", location: "الرياض", tags: ["Flutter", "iOS", "Android"], category: "التقنية", description: "برمجة تطبيقات جوال باستخدام أحدث التقنيات", requirements: "Flutter, iOS Development, Android Development, Dart" },
-      { title: "مصمم جرافيك", company: "وكالة إبداعية", image: "https://source.unsplash.com/random/800x600?design", salary: "15,000 - 20,000 ر.س", location: "جدة", tags: ["Photoshop", "Illustrator", "UI/UX"], category: "التصميم", description: "تصميم هويات بصرية مبتكرة", requirements: "Photoshop, Illustrator, UI/UX Design" },
-      { title: "محلل مالي", company: "شركة استثمار", image: "https://source.unsplash.com/random/800x600?finance", salary: "18,000 - 23,000 ر.س", location: "الرياض", tags: ["Excel", "تحليل مالي", "تخطيط"], category: "المالية", description: "تحليل البيانات المالية وتقديم التقارير", requirements: "Financial Analysis, Excel, Financial Planning" }
+      { title: "مطور ذكاء اصطناعي", company: "شركة المستقبل", image: "/static/img/ai_marketing.jpeg", salary: "25,000 - 30,000 ر.س", location: "الرياض", tags: ["AI", "Python", "Machine Learning"], category: "التقنية", description: "تطوير أنظمة الذكاء الاصطناعي المتقدمة", requirements: "Python, Machine Learning, Deep Learning, AI" },
+      { title: "مهندس برمجيات", company: "Techno Arabia", image: "/static/img/Developer.jpeg", salary: "22,000 - 27,000 ر.س", location: "الخبر", tags: ["JavaScript", "Node.js", "Backend"], category: "التقنية", description: "بناء تطبيقات ويب قوية وحديثة", requirements: "JavaScript, Node.js, Backend Development, REST API" },
+      { title: "مطور تطبيقات جوال", company: "Digital Solutions", image: "/static/img/Android.jpeg"
+, salary: "20,000 - 25,000 ر.س", location: "الرياض", tags: ["Flutter", "iOS", "Android"], category: "التقنية", description: "برمجة تطبيقات جوال باستخدام أحدث التقنيات", requirements: "Flutter, iOS Development, Android Development, Dart" },
+      { title: "مصمم جرافيك", company: "وكالة إبداعية", image: "/static/img/download.jpeg"
+, salary: "15,000 - 20,000 ر.س", location: "جدة", tags: ["Photoshop", "Illustrator", "UI/UX"], category: "التصميم", description: "تصميم هويات بصرية مبتكرة", requirements: "Photoshop, Illustrator, UI/UX Design" },
+      { title: "محلل مالي", company: "شركة استثمار", image: "/static/img/Автоматизиру.jpeg"
+, salary: "18,000 - 23,000 ر.س", location: "الرياض", tags: ["Excel", "تحليل مالي", "تخطيط"], category: "المالية", description: "تحليل البيانات المالية وتقديم التقارير", requirements: "Financial Analysis, Excel, Financial Planning" }
     ];
 
     let currentCategory = "الكل";
